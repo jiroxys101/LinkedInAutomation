@@ -24,13 +24,13 @@ d = datetime.now().strftime("%I:%M %p")
 print(d)
 
 log_in = \
-{"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
+    {"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
           "Omotayo Ogunnusi": ["tayoogunnusi@outlook.com", "Temitope5"],
           "Rijul K": ["rijulkumar7500@gmail.com", "nov192011"],
           "Prasad Pansare": ["prasadpansare2019@gmail.com", "Gocam2020"],
           "Dieudonné Ndjebayi": ["rijul.kumar@construction.com", "Gocam2020"],
           "Sushma Kumar": ["sush126.kumar@gmail.com", "Dmnd2017"]
- }
+     }
 
 user_agent_list = [
    #Chrome
