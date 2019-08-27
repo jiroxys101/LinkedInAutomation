@@ -181,8 +181,8 @@ def setup():
     pass_field_element.send_keys(password)
 
     login_button_element.click()
-    logo_x_path = "(//a[contains(@href, 'feed')])"
-    WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath(logo_x_path))
+    logo_x_path = "(//span[contains(@id, 'feed-tab-icon')])"
+    WebDriverWait(driver, 60).until(lambda driver: driver.find_element_by_xpath(logo_x_path))
     print("Log in successful")
     # print(driver.title)
 
