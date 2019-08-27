@@ -227,35 +227,12 @@ def setup():
                 else:
                     break
             # check for name
-            lenOfPage = driver.execute_script(
-                "window.scrollTo(0, document.body.scrollHeight);"
-                "var lenOfPage=document.body.scrollHeight;return lenOfPage;")
 
-            match = False
-            while match is False:
-                lastCount = lenOfPage
-                time.sleep(3)
-                lenOfPage = driver.execute_script(
-                    "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
-                if lastCount == lenOfPage:
-                    match = True
-            time.sleep(1)
-
-            see_more_xpath = "//button[contains(@class,'additional-skills')]"
-            body = driver.find_element_by_css_selector('body')
-            scroll = 0
-
-            while scroll < 1:
-                scroll += 0.1
-                body.send_keys(Keys.PAGE_UP)
-                time.sleep(1)
-            time.sleep(1)
-
-            page_source = str(driver.page_source)
-            start_pos = page_source.find('industryName')
-            end_pos = page_source.find(',', start_pos)
-            industry_name = page_source[start_pos + 15:end_pos - 1]
-            industry_name = str(industry_name.replace(' &amp; ', ' & '))
+            # page_source = str(driver.page_source)
+            # start_pos = page_source.find('industryName')
+            # end_pos = page_source.find(',', start_pos)
+            # industry_name = page_source[start_pos + 15:end_pos - 1]
+            # industry_name = str(industry_name.replace(' &amp; ', ' & '))
 
             name_xpath = "//li[contains(@class,'t-24')]"
 
@@ -298,6 +275,31 @@ def setup():
                 print("Error: No location area detected")
                 time.sleep(random.randint(5, 15))
                 continue
+
+            lenOfPage = driver.execute_script(
+                "window.scrollTo(0, document.body.scrollHeight);"
+                "var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+
+            match = False
+            while match is False:
+                lastCount = lenOfPage
+                time.sleep(3)
+                lenOfPage = driver.execute_script(
+                    "window.scrollTo(0, document.body.scrollHeight);"
+                    "var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+                if lastCount == lenOfPage:
+                    match = True
+            time.sleep(1)
+
+            see_more_xpath = "//button[contains(@class,'additional-skills')]"
+            body = driver.find_element_by_css_selector('body')
+            scroll = 0
+
+            while scroll < 1:
+                scroll += 0.1
+                body.send_keys(Keys.PAGE_UP)
+                time.sleep(1)
+            time.sleep(1)
 
             see_more_xpath = "//button[contains(@class,'additional-skills')]"
             try:
