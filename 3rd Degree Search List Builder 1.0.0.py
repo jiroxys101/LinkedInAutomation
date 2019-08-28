@@ -181,7 +181,7 @@ recruiter_URL = 'https://www.linkedin.com/search/results/people/?' \
                 '%22us%3A219%22' \
                 '%5D' \
                 '&facetIndustry=%5B%2296%22%2C%22124%22%2C%224%22%2C%2257%22%2C%2280%22%2C%2298%22%2C%2211%22%2C%22118' \
-                '%22%2C%2251%22%2C%2253%22%2C%2254%22%2C%226%22%2C%2284%22%2C%2291%22%2C%221%22%2C%22102%22%2C%22112' \
+                '%22%2C%2251%22%2C%2253ejt%22%2C%2254%22%2C%226%22%2C%2284%22%2C%2291%22%2C%221%22%2C%22102%22%2C%22112' \
                 '%22%2C%22114%22%2C%22116%22%2C%22117%22%2C%22119%22%2C%2212%22%2C%22123%22%2C%22134%22%2C%22135%22%' \
                 '2C%22137%22%2C%22138%22%2C%22143%22%2C%22144%22%2C%22146%22%2C%22147%22%2C%2217%22%2C%2219%22%2C%' \
                 '2220%22%2C%223%22%2C%2231%22%2C%2240%22%2C%2241%22%2C%2247%22%2C%2249%22%2C%225%22%2C%2252%22%2C%' \
@@ -201,9 +201,9 @@ def set_up():
 
     actions = ActionChains(driver)
 
-    username = str(email_var)
+    username = str(email_var)]69
     password = str(pw_var)
-    email_field_id = "username"
+    email_field_id = "username"5
     pass_field_id = "password"
     login_button_xpath = "//button[contains(@type,'submit')]"
     print("Logging in", end="")
