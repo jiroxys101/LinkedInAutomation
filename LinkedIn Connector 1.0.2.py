@@ -393,7 +393,7 @@ def setup():
             try:
                 sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send now')]"))
                 sendButtonElement.click()
-                time.sleep(random.randint(35, 55))
+                time.sleep(random.randint(25, 45))
                 end_time = time.time() - start_time
                 total_time += end_time
 
