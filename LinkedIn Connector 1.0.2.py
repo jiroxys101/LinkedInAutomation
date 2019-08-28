@@ -382,7 +382,7 @@ def setup():
 
             try:
                 MessageElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//textarea[contains(@name,'message)]"))
-                MessageElement.send_keys(username)
+                MessageElement.send_keys(message_script)
             except TimeoutException:
                 errors.append(results[count1])
                 count1 += 1

@@ -33,8 +33,7 @@ log_in = {"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
 
           }
 
-user_agent_list = \
-    [
+user_agent_list = [
    #Chrome
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
@@ -47,9 +46,7 @@ user_agent_list = \
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
     #Firefox
-    'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)',
     'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',
-    'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (Windows NT 6.2; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
@@ -57,8 +54,6 @@ user_agent_list = \
     'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64; Trident/7.0; rv:11.0) like Gecko',
-    'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)',
-    'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
     'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)'
     ]
 
@@ -178,11 +173,19 @@ recruiter_keyword = str(input("Enter Keyword you want to use: ")).title().strip(
 file_name = str("2nd - " + name_var + " - " + recruiter_keyword + " - " + ID + '.csv')
 print(file_name)
 
-recruiter_URL = \
-    'https://www.linkedin.com/search/results/people/?facetGeoRegion=' \
-    '%5B%22us%3A70%22%2C%22us%3A97%22%2C%22us%3A7416%22%2C%22us%3A77%22%5D&facetNetwork=' \
-    '%5B%22O%22%5D&facetProfileLanguage=%5B%22en%22%5D&keywords=%22'\
-    + recruiter_keyword + '%22&origin=FACETED_SEARCH&page='
+recruiter_URL = 'https://www.linkedin.com/search/results/people/?' \
+                'facetGeoRegion=%5B%22us%3A70%22%2C%22us%3A77%22%2C%22us%3A97%22%2C%22us%3A7416%22%2C%22us%3A219%22%5D' \
+                '&facetIndustry=%5B%2296%22%2C%22124%22%2C%224%22%2C%2257%22%2C%2280%22%2C%2298%22%2C%2211%22%2C%22118' \
+                '%22%2C%2251%22%2C%2253%22%2C%2254%22%2C%226%22%2C%2284%22%2C%2291%22%2C%221%22%2C%22102%22%2C%22112' \
+                '%22%2C%22114%22%2C%22116%22%2C%22117%22%2C%22119%22%2C%2212%22%2C%22123%22%2C%22134%22%2C%22135%22%' \
+                '2C%22137%22%2C%22138%22%2C%22143%22%2C%22144%22%2C%22146%22%2C%22147%22%2C%2217%22%2C%2219%22%2C%' \
+                '2220%22%2C%223%22%2C%2231%22%2C%2240%22%2C%2241%22%2C%2247%22%2C%2249%22%2C%225%22%2C%2252%22%2C%' \
+                '2255%22%2C%2256%22%2C%2261%22%2C%2262%22%2C%227%22%2C%228%22%2C%2282%22%2C%2283%22%2C%2286%22%2C%' \
+                '2287%22%2C%2297%22%5D' \
+                '&facetNetwork=%5B%22O%22%5D&keywords=%22' + recruiter_keyword +\
+                '%22&origin=FACETED_SEARCH&title=NOT%20(' \
+                '%22CEO%22%20OR%20%22Founder%22%20OR%20%22' \
+                'President%22%20OR%20%22Chief%22%20OR%20%22Director%22%20OR%20%22Owner%22)&page='
 
 
 def set_up():
