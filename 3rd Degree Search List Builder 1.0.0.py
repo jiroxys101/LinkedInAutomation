@@ -50,7 +50,6 @@ user_agent_list = [
     'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (Windows NT 6.2; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
-    'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64; Trident/7.0; rv:11.0) like Gecko',
@@ -170,11 +169,17 @@ is_URL = True
 
 recruiter_keyword = str(input("Enter Keyword you want to use: ")).title().strip()
 
-file_name = str("2nd - " + name_var + " - " + recruiter_keyword + " - " + ID + '.csv')
+file_name = str("3rd - " + name_var + " - " + recruiter_keyword + " - " + ID + '.csv')
 print(file_name)
 
 recruiter_URL = 'https://www.linkedin.com/search/results/people/?' \
-                'facetGeoRegion=%5B%22us%3A70%22%2C%22us%3A77%22%2C%22us%3A97%22%2C%22us%3A7416%22%2C%22us%3A219%22%5D' \
+                'facetGeoRegion=%5B' \
+                '%22us%3A70%22%2C' \
+                '%22us%3A77%22%2C' \
+                '%22us%3A97%22%2C' \
+                '%22us%3A7416%22%2C' \
+                '%22us%3A219%22' \
+                '%5D' \
                 '&facetIndustry=%5B%2296%22%2C%22124%22%2C%224%22%2C%2257%22%2C%2280%22%2C%2298%22%2C%2211%22%2C%22118' \
                 '%22%2C%2251%22%2C%2253%22%2C%2254%22%2C%226%22%2C%2284%22%2C%2291%22%2C%221%22%2C%22102%22%2C%22112' \
                 '%22%2C%22114%22%2C%22116%22%2C%22117%22%2C%22119%22%2C%2212%22%2C%22123%22%2C%22134%22%2C%22135%22%' \
@@ -309,6 +314,7 @@ def set_up():
                         profile_list.append(link_list[profile_wrapper_to_link_count])
                         profile_wrapper_to_link_count += 1
         loopy += 1
+        time.sleep(5)
         driver.get(recruiter_URL + str(loopy + 1))
         print(".", end="")
     driver.quit()

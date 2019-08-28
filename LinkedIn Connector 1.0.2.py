@@ -27,8 +27,7 @@ log_in = {"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
           "Sushma Kumar": ["sush126.kumar@gmail.com", "Dmnd2017"],
           }
 
-user_agent_list = \
-    [
+user_agent_list = [
    #Chrome
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
@@ -41,18 +40,13 @@ user_agent_list = \
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
     #Firefox
-    'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)',
     'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',
-    'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (Windows NT 6.2; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
-    'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64; Trident/7.0; rv:11.0) like Gecko',
-    'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)',
-    'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
     'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)'
     ]
 
@@ -182,6 +176,8 @@ def setup():
     login_button_xpath = "//button[contains(@type,'submit')]"
     print("Logging in...", end=" ")
     driver.save_screenshot('screenie.png')
+    agent = driver.execute_script("return navigator.userAgent")
+    print(str(agent))
 
     email_field_element = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_id(email_field_id))
     pass_field_element = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_id(pass_field_id))
@@ -195,8 +191,6 @@ def setup():
     logo_x_path = "(//span[contains(@id, 'feed-tab-icon')])"
     WebDriverWait(driver, 60).until(lambda driver: driver.find_element_by_xpath(logo_x_path))
     print("Log in successful")
-    agent = driver.execute_script("return navigator.userAgent")
-    print(str(agent))
     # time.sleep(60)
     count1 = 0  # counter to loop through array of links
     count2 = 0  # counter to check for recurring instances of NoSuchElement Exceptions
@@ -352,22 +346,37 @@ def setup():
                              " particularly your endorsements for your " + skill_variable + " skills." \
                              " I represent a business development organization looking to expand its partnerships." \
                              " Have you thought about using your skills to develop a business outside of what you do?"
+
+            try:
+                moreElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class,'overflow-toggle')]"))
+                driver.execute_script('arguments[0].click();', moreElement)
+            except TimeoutException:
+                errors.append(results[count1])
+                count1 += 1
+                print("Error: No More Button detected")
+                time.sleep(random.randint(4, 11))
+                continue
+
             try:
                 connectButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class, 'connect')]"))
                 elem_class = str(connectButtonElement.get_attribute("class")).lower()
                 if "disabled" not in elem_class:
-                    connectButtonElement.click()
+                    driver.execute_script('arguments[0].click();', connectButtonElement)
                 else:
                     count1 += 1
                     print("Invite pending. Skipping...")
                     time.sleep(random.randint(4, 11))
                     continue
             except TimeoutException:
-                errors.append(results[count1])
-                count1 += 1
-                print("Connect Button Timeout. Skipping...")
-
-                continue
+                print(' | Checking DropDown |', end=" ")
+                try:
+                    connectListElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//artdeco-dropdown-item[contains(@class, 'connect')]"))
+                    driver.execute_script('arguments[0].click();', connectListElement)
+                except TimeoutException:
+                    errors.append(results[count1])
+                    count1 += 1
+                    print("Connect Button Timeout. Skipping...")
+                    continue
             time.sleep(random.randint(5, 10))
 
             try:
@@ -381,8 +390,9 @@ def setup():
                 continue
 
             try:
-                MessageElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//textarea[contains(@name,'message)]"))
-                MessageElement.send_keys(message_script)
+                textAreaElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
+                textAreaElement.clear()
+                textAreaElement.send_keys(message_script)
             except TimeoutException:
                 errors.append(results[count1])
                 count1 += 1
@@ -391,7 +401,7 @@ def setup():
                 continue
 
             try:
-                sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send now')]"))
+                sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send')]"))
                 sendButtonElement.click()
                 time.sleep(random.randint(25, 45))
                 end_time = time.time() - start_time
