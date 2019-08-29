@@ -118,6 +118,25 @@ button2.pack()
 
 mainloop()
 
+location = Tk()
+variable3 = StringVar(location)
+variable3.set("")  # default value
+location_list = OptionMenu(location, variable3, "Greater New York City Area", "Greater Philadelphia Area",
+                           "Washington D.C. Metro Area ", "Baltimore, Maryland Area", "Dover, Delaware Area")
+location_list.pack()
+
+
+def ok3():
+    print("Location is ", variable3.get())
+    location.quit()
+    location.destroy()
+
+
+button3 = Button(location, text="OK", command=ok2)
+button3.pack()
+
+mainloop()
+
 filename = askopenfilename(title=str(email_var),
                            initialdir=r"C:\Users\jirox_000\Desktop\Business Scripts\First Degree Connections",
                            filetypes=[("CSV files", "*.csv")])
@@ -201,9 +220,9 @@ def set_up():
 
     actions = ActionChains(driver)
 
-    username = str(email_var)]69
+    username = str(email_var)
     password = str(pw_var)
-    email_field_id = "username"5
+    email_field_id = "username"
     pass_field_id = "password"
     login_button_xpath = "//button[contains(@type,'submit')]"
     print("Logging in", end="")
