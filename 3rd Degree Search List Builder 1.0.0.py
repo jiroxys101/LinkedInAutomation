@@ -66,7 +66,6 @@ variable1 = StringVar(master)
 variable1.set("")  # default value
 
 w = OptionMenu(master, variable1, "Rijul Kumar", "Omotayo Ogunnusi", "Rijul K", "Prasad Pansare", "Dieudonné Ndjebayi", "Sushma Kumar")
-               "Sushma Kumar")
 w.pack()
 
 name_var = ""
