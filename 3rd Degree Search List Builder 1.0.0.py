@@ -84,9 +84,9 @@ def ok():
         global name_var
         name_var = variable1.get()
         global email_var
-        email_var = log_in.get(variable1.get(), "")[0]
+        email_var = log_in.get(variable1.get())[0]
         global pw_var
-        pw_var = log_in.get(variable1.get(), "")[1]
+        pw_var = log_in.get(variable1.get())[1]
         print("Name: ", name_var)
         print("E-Mail: ", email_var)
         print("Password: ", pw_var)
@@ -118,21 +118,34 @@ button2.pack()
 
 mainloop()
 
+locations = {"Greater New York City Area": "3A70",
+             "Greater Philadelphia Area": "3A77",
+             "Washington D.C. Metro Area": "3A97",
+             "Baltimore, Maryland Area": "3A7416",
+             "Dover, Delaware Area": "3A219"
+             }
+
 location = Tk()
 variable3 = StringVar(location)
 variable3.set("")  # default value
-location_list = OptionMenu(location, variable3, "Greater New York City Area", "Greater Philadelphia Area",
-                           "Washington D.C. Metro Area ", "Baltimore, Maryland Area", "Dover, Delaware Area")
-location_list.pack()
+location_options = OptionMenu(location, variable3, "Greater New York City Area", "Greater Philadelphia Area",
+                              "Washington D.C. Metro Area ", "Baltimore, Maryland Area", "Dover, Delaware Area")
+location_options.pack()
 
 
 def ok3():
-    print("Location is ", variable3.get())
+    global location_var
+    location_var = str(variable3.get())
+    print("Location: ", location_var)
+    global encode
+    encode = locations.get(variable3.get())
+    print("Encode: ", encode)
+
     location.quit()
     location.destroy()
 
 
-button3 = Button(location, text="OK", command=ok2)
+button3 = Button(location, text="OK", command=ok3)
 button3.pack()
 
 mainloop()
@@ -188,17 +201,10 @@ is_URL = True
 
 recruiter_keyword = str(input("Enter Keyword you want to use: ")).title().strip()
 
-file_name = str("3rd - " + name_var + " - " + recruiter_keyword + " - " + ID + '.csv')
+file_name = str("3rd - " + name_var + " - " + recruiter_keyword + " - " + location_var + " - " + ID + '.csv')
 print(file_name)
 
-recruiter_URL = 'https://www.linkedin.com/search/results/people/?' \
-                'facetGeoRegion=%5B' \
-                '%22us%3A70%22%2C' \
-                '%22us%3A77%22%2C' \
-                '%22us%3A97%22%2C' \
-                '%22us%3A7416%22%2C' \
-                '%22us%3A219%22' \
-                '%5D' \
+recruiter_URL = 'https://www.linkedin.com/search/results/people/?facetGeoRegion=%5B%22us%' + encode + '%22%5D' +\
                 '&facetIndustry=%5B%2296%22%2C%22124%22%2C%224%22%2C%2257%22%2C%2280%22%2C%2298%22%2C%2211%22%2C%22118' \
                 '%22%2C%2251%22%2C%2253ejt%22%2C%2254%22%2C%226%22%2C%2284%22%2C%2291%22%2C%221%22%2C%22102%22%2C%22112' \
                 '%22%2C%22114%22%2C%22116%22%2C%22117%22%2C%22119%22%2C%2212%22%2C%22123%22%2C%22134%22%2C%22135%22%' \
