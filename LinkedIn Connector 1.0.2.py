@@ -33,7 +33,6 @@ user_agent_list = [
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
     'Mozilla/5.0 (Windows NT 5.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
     'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
-    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36',
     'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
@@ -47,7 +46,6 @@ user_agent_list = [
     'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64; Trident/7.0; rv:11.0) like Gecko',
-    'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)'
     ]
 
 
@@ -348,16 +346,6 @@ def setup():
                              " Have you thought about using your skills to develop a business outside of what you do?"
 
             try:
-                moreElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class,'overflow-toggle')]"))
-                driver.execute_script('arguments[0].click();', moreElement)
-            except TimeoutException:
-                errors.append(results[count1])
-                count1 += 1
-                print("Error: No More Button detected")
-                time.sleep(random.randint(4, 11))
-                continue
-
-            try:
                 connectButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class, 'connect')]"))
                 elem_class = str(connectButtonElement.get_attribute("class")).lower()
                 if "disabled" not in elem_class:
@@ -370,36 +358,54 @@ def setup():
             except TimeoutException:
                 print(' | Checking DropDown |', end=" ")
                 try:
+                    moreElement = WebDriverWait(driver, 5).until(
+                        lambda driver: driver.find_element_by_xpath("//button[contains(@class,'overflow-toggle')]"))
+                    moreElement.click()
+                except TimeoutException:
+                    errors.append(results[count1])
+                    count1 += 1
+                    print("Error: No More Button detected")
+                    time.sleep(random.randint(4, 11))
+                    continue
+
+                try:
                     connectListElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//artdeco-dropdown-item[contains(@class, 'connect')]"))
-                    driver.execute_script('arguments[0].click();', connectListElement)
                 except TimeoutException:
                     errors.append(results[count1])
                     count1 += 1
                     print("Connect Button Timeout. Skipping...")
                     continue
-            time.sleep(random.randint(5, 10))
-
+                else:
+                    connect_div = connectListElement.find_element_by_xpath('..')
+                    print(' | Dropdown Connect Found |', end=" ")
+                    time.sleep(2)
+                    connect_div.click()
+                    print(' | Click 1 |', end=" ")
+                    time.sleep(2)
+            print(' | Checking for Add a Note |', end=" ")
             try:
-                addNoteElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Add a note')]"))
-                addNoteElement.click()
+                addNoteElement = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Add a note')]"))
+                time.sleep(2)
+                driver.execute_script('arguments[0].click();', addNoteElement)
             except TimeoutException:
                 errors.append(results[count1])
                 count1 += 1
                 print("Error: No Add Note Button detected")
                 time.sleep(random.randint(4, 11))
                 continue
-
+            time.sleep(3)
             try:
-                textAreaElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
-                textAreaElement.clear()
-                textAreaElement.send_keys(message_script)
+                WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
             except TimeoutException:
                 errors.append(results[count1])
                 count1 += 1
                 print("Error: No Message Area detected")
                 time.sleep(random.randint(4, 11))
                 continue
-
+            else:
+                textAreaElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
+                textAreaElement.send_keys(message_script)
+            time.sleep(3)
             try:
                 sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send')]"))
                 sendButtonElement.click()
