@@ -376,10 +376,9 @@ def setup():
                     print("Connect Button Timeout. Skipping...")
                     continue
                 else:
-                    connect_div = connectListElement.find_element_by_xpath('..')
                     print(' | Dropdown Connect Found |', end=" ")
                     time.sleep(2)
-                    connect_div.send_keys(Keys.ENTER)
+                    driver.execute_script('arguments[0].click();', connectListElement)
                     print(' | Click 1 |', end=" ")
                     time.sleep(2)
             print(' | Checking for Add a Note |', end=" ")
