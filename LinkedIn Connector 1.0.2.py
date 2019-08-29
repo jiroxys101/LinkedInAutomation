@@ -379,20 +379,21 @@ def setup():
                     connect_div = connectListElement.find_element_by_xpath('..')
                     print(' | Dropdown Connect Found |', end=" ")
                     time.sleep(2)
-                    connect_div.click()
+                    connect_div.send_keys(Keys.ENTER)
                     print(' | Click 1 |', end=" ")
                     time.sleep(2)
             print(' | Checking for Add a Note |', end=" ")
             try:
                 addNoteElement = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Add a note')]"))
-                time.sleep(2)
-                driver.execute_script('arguments[0].click();', addNoteElement)
             except TimeoutException:
                 errors.append(results[count1])
                 count1 += 1
                 print("Error: No Add Note Button detected")
                 time.sleep(random.randint(4, 11))
                 continue
+            else:
+                time.sleep(2)
+                driver.execute_script('arguments[0].click();', addNoteElement)
             time.sleep(3)
             try:
                 WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
