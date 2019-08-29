@@ -22,15 +22,11 @@ import math
 
 
 log_in = {"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
-
           "Omotayo Ogunnusi": ["tayoogunnusi@outlook.com", "Temitope5"],
-
           "Rijul K": ["rijulkumar7500@gmail.com", "nov192011"],
-
-          "Devansh Kumar": ["devanshk64@gmail.com", "Dk081899"],
-
+          "Prasad Pansare": ["prasadpansare2019@gmail.com", "Gocam2020"],
+          "Dieudonné Ndjebayi": ["rijul.kumar@construction.com", "Gocam2020"],
           "Sushma Kumar": ["sush126.kumar@gmail.com", "Dmnd2017"],
-
           }
 
 user_agent_list = [
@@ -69,7 +65,7 @@ print('')
 variable1 = StringVar(master)
 variable1.set("")  # default value
 
-w = OptionMenu(master, variable1, "Rijul Kumar", "Omotayo Ogunnusi", "Rijul K", "Devansh Kumar",
+w = OptionMenu(master, variable1, "Rijul Kumar", "Omotayo Ogunnusi", "Rijul K", "Prasad Pansare", "Dieudonné Ndjebayi", "Sushma Kumar")
                "Sushma Kumar")
 w.pack()
 
@@ -278,7 +274,7 @@ def set_up():
         county_boi = 0
         results_found_elem = ''
         try:
-            results_found_elem = WebDriverWait(driver, 2).until(lambda driver: driver.find_element_by_xpath(
+            results_found_elem = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath(
                 "//h1[contains(@class, 't-normal')]")).get_attribute('innerText')
         except TimeoutException:
             if "No Results Found" in results_found_elem:
