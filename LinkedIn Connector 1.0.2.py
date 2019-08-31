@@ -348,8 +348,6 @@ def setup():
                              " I represent a business development organization looking to expand its partnerships." \
                              " Have you thought about using your skills to develop a business outside of what you do?"
 
-            body.send_keys(Keys.HOME)
-
             try:
                 connectButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class, 'connect')]"))
                 elem_class = str(connectButtonElement.get_attribute("class")).lower()
@@ -361,6 +359,8 @@ def setup():
                     time.sleep(random.randint(4, 11))
                     continue
             except TimeoutException:
+                body.send_keys(Keys.HOME)
+                time.sleep(3)
                 print(' | Checking DropDown |', end=" ")
                 try:
                     moreElement = WebDriverWait(driver, 5).until(
@@ -413,8 +413,8 @@ def setup():
                 textAreaElement.send_keys(message_script)
             time.sleep(3)
             try:
-                sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send')]"))
-                sendButtonElement.click()
+                sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send ')]"))
+                driver.execute_script('arguments[0].click();', sendButtonElement)
                 time.sleep(random.randint(1, 45))
                 end_time = time.time() - start_time
                 total_time += end_time
