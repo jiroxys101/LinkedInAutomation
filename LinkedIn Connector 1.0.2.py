@@ -411,7 +411,7 @@ def setup():
             else:
                 textAreaElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
                 textAreaElement.send_keys(message_script)
-            time.sleep(3)
+            time.sleep(2.5)
             try:
                 sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send ')]"))
                 driver.execute_script('arguments[0].click();', sendButtonElement)
