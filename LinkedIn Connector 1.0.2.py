@@ -12,6 +12,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 import datetime
 from datetime import datetime
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 d = datetime.now().strftime("%I:%M %p")
 print(d)
@@ -44,7 +46,6 @@ user_agent_list = [
     'Mozilla/5.0 (Windows NT 6.2; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
     'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko',
-    'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)',
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64; Trident/7.0; rv:11.0) like Gecko',
     ]
 
@@ -166,6 +167,8 @@ def setup():
     driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver)
     driver.get('https://www.linkedin.com/uas/login?trk=guest_homepage-basic_nav-header-signin')
     driver.set_page_load_timeout(60)
+
+    actions = ActionChains(driver)
 
     username = str(email_var)
     password = str(pw_var)
@@ -345,6 +348,8 @@ def setup():
                              " I represent a business development organization looking to expand its partnerships." \
                              " Have you thought about using your skills to develop a business outside of what you do?"
 
+            body.send_keys(Keys.HOME)
+
             try:
                 connectButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class, 'connect')]"))
                 elem_class = str(connectButtonElement.get_attribute("class")).lower()
@@ -360,6 +365,7 @@ def setup():
                 try:
                     moreElement = WebDriverWait(driver, 5).until(
                         lambda driver: driver.find_element_by_xpath("//button[contains(@class,'overflow-toggle')]"))
+                    time.sleep(1)
                     moreElement.click()
                 except TimeoutException:
                     errors.append(results[count1])
@@ -377,10 +383,10 @@ def setup():
                     continue
                 else:
                     print(' | Dropdown Connect Found |', end=" ")
-                    time.sleep(2)
+                    time.sleep(10)
                     driver.execute_script('arguments[0].click();', connectListElement)
                     print(' | Click 1 |', end=" ")
-                    time.sleep(2)
+                    time.sleep(10)
             print(' | Checking for Add a Note |', end=" ")
             try:
                 addNoteElement = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Add a note')]"))
@@ -409,7 +415,7 @@ def setup():
             try:
                 sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send')]"))
                 sendButtonElement.click()
-                time.sleep(random.randint(25, 45))
+                time.sleep(random.randint(1, 45))
                 end_time = time.time() - start_time
                 total_time += end_time
 
