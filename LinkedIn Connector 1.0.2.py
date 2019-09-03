@@ -436,7 +436,7 @@ def setup():
 
     if count2 != 3:
 
-        for x in range(0, num):
+        for x in range(0, count1):
             results.pop(0)
 
         fop = open(filename, "w+")
