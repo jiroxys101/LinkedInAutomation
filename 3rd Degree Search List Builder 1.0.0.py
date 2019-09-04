@@ -193,8 +193,9 @@ def countdown(t):
 is_URL = True
 
 recruiter_keyword = str(input("Enter Keyword you want to use: ")).title().strip()
+recruiter_filename = str(re.sub(r'\W+', '', recruiter_keyword))
 
-file_name = str("3rd - " + name_var + " - " + recruiter_keyword + " - " + location_var + " - " + ID + '.csv')
+file_name = str("3rd - " + name_var + " - " + recruiter_filename + " - " + location_var + " - " + ID + '.csv')
 print(file_name)
 print(user_agent)
 def set_up():
