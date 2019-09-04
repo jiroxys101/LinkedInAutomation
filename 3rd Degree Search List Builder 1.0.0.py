@@ -19,6 +19,7 @@ from datetime import datetime
 from tkinter.filedialog import askopenfilename
 from collections import OrderedDict
 import math
+import re
 
 
 log_in = {"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
