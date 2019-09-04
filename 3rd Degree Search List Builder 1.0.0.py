@@ -198,6 +198,8 @@ recruiter_filename = str(re.sub(r'\W+', '', recruiter_keyword))
 file_name = str("3rd - " + name_var + " - " + recruiter_filename + " - " + location_var + " - " + ID + '.csv')
 print(file_name)
 print(user_agent)
+
+
 def set_up():
 
     driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver)
