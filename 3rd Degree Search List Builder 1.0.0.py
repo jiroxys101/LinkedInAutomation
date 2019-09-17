@@ -201,12 +201,11 @@ print(user_agent)
 
 
 def set_up():
-
     driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver)
     driver.get('https://www.linkedin.com/uas/login?trk=guest_homepage-basic_nav-header-signin')
     driver.set_page_load_timeout(60)
-    page = str(1)
-
+    num = 1
+    page = str(num)
     recruiter_URL = 'https://www.linkedin.com/search/results/people/?facetGeoRegion=%5B%22us%' + encode + '%22%5D' + \
                     '&facetIndustry=%5B%2296%22%2C%22124%22%2C%224%22%2C%2257%22%2C%2280%22%2C%2298%22%2C%2211%22%2C%22118' \
                     '%22%2C%2251%22%2C%2253ejt%22%2C%2254%22%2C%226%22%2C%2284%22%2C%2291%22%2C%221%22%2C%22102%22%2C%22112' \

@@ -14,9 +14,9 @@ import datetime
 from datetime import datetime
 from selenium.webdriver.common.action_chains import ActionChains
 
-
 d = datetime.now().strftime("%I:%M %p")
 print(d)
+
 
 is_int = True
 
@@ -120,12 +120,12 @@ if variable2.get() == "Run Script (Headless)":
 
 bunji = os.getenv("USERNAME")
 # userProfile = "C:\\Users\\jirox_000\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
-userProfile = "C:\\Users\\" + bunji + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
+# userProfile = "C:\\Users\\" + bunji + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
 chrome_options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors", "safebrowsing-disable-download-protection", "safebrowsing-disable-auto-update", "disable-client-side-phishing-detection"])
 
-chrome_options.add_argument("user-data-dir={}".format(userProfile))
+# chrome_options.add_argument("user-data-dir={}".format(userProfile))
 chrome_options.add_argument('--disable-extensions')
-chrome_options.add_argument('--profile-directory=Default')
+# chrome_options.add_argument('--profile-directory=Default')
 chrome_options.add_argument("--incognito")
 chrome_options.add_argument("--disable-plugins-discovery");
 chrome_options.add_argument("--start-maximized")
@@ -208,7 +208,7 @@ def setup():
     total_time = 0
 
     while count3 < num:
-        if count2 < 3: # test
+        if count2 < 5:  # test
             start_time = time.time()
 
             #  refresh page if it takes longer than 10 seconds to load
@@ -254,7 +254,7 @@ def setup():
             except TimeoutException:
                 errors.append(results[count1])
                 count1 += 1
-                # count2 += 1
+                count2 += 1
                 print("No Skills listed. Skipping...")
                 time.sleep(random.randint(5, 15))
                 continue
@@ -415,7 +415,7 @@ def setup():
             try:
                 sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send ')]"))
                 driver.execute_script('arguments[0].click();', sendButtonElement)
-                time.sleep(random.randint(1, 45))
+                time.sleep(random.randint(1, 20))
                 end_time = time.time() - start_time
                 total_time += end_time
 
@@ -423,6 +423,11 @@ def setup():
                 count1 += 1
                 count3 += 1
                 count2 = 0
+
+                if count3 % 15 == 0:
+                    driver.get('http://www.google.com')
+                    time.sleep(random.randint(1800, 5400))
+
             except TimeoutException:
                 errors.append(results[count1])
                 count1 += 1
