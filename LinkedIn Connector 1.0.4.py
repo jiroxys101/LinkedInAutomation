@@ -402,7 +402,7 @@ def setup():
                             lambda driver: driver.find_elements_by_xpath(education_x_path))
                     except TimeoutException:
                         print("No Education Years Present | ", end=" | ")
-                        if total_experience >= 16:
+                        if total_experience >= 18:
                             print("Above Maximum Experience")
                             errors.append(results[count1] + " - outside experience range")
                             count1 += 1
