@@ -17,6 +17,9 @@ import logging
 import atexit
 import smtplib
 import ssl
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException
+
 
 smtp_server = 'smtp.gmail.com'
 
@@ -212,12 +215,12 @@ def setup():
     count2 = 0  # counter to check for recurring instances of NoSuchElement Exceptions
     count3 = 0  # counter to keep track of successful sent invitations
 
-    if len(results) < 50:
+    if len(results) < 150:
         num = len(results)
         print(str(num) + " profiles left")
 
     else:
-        num = random.randint(35, 55)  # set to 5 for testing
+        num = random.randint(140, 160)  # set to 5 for testing
         print(str(num) + " profiles")
 
     total_time = 0
@@ -310,23 +313,60 @@ def setup():
                     else:
                         driver.execute_script('arguments[0].scrollIntoView(true);', experience_button)
                         driver.execute_script('arguments[0].click();', experience_button)
+                    try:
+                        WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath(experience_see_more))
+                    except TimeoutException:
+                        print("No Experience Button Found", end=" | ")
 
-                    descriptions = WebDriverWait(driver, 7).until(lambda driver: driver.find_elements_by_xpath(
-                        "//h4[contains(@class,'date-range')]"))
-                    years = WebDriverWait(driver, 7).until(lambda driver: driver.find_elements_by_xpath(
-                        "//span[contains(@class,'bullet-item-v2')]"))
-
-                    print(len(years), end=" | ") # comment out when code is confirmed to work
-                    print(len(descriptions), end=" | ")
+                    try:
+                        descriptions = WebDriverWait(driver, 5).until(lambda driver: driver.find_elements_by_xpath(
+                            "//h4[contains(@class,'date-range')]"))
+                    except TimeoutException:
+                        print("No descriptions found")
+                        count1 += 1
+                        continue
+                    ignored_exceptions = (NoSuchElementException, StaleElementReferenceException,)
+                    try:
+                        years = WebDriverWait(driver, 7).until(lambda driver: driver.find_elements_by_xpath(
+                            "//span[contains(@class,'bullet-item-v2')]"))
+                    except TimeoutException:
+                        print("No years found")
+                        count1 += 1
+                        continue
+                    else:
+                        driver.execute_script('arguments[0].scrollIntoView(true);', years[len(years)-1])
+                    time.sleep(5)
 
                     years_array = []
                     present_array = []
                     descriptions_array = []
+
+                    try:
+                        years = WebDriverWait(driver, 7).until(lambda driver: driver.find_elements_by_xpath(
+                            "//span[contains(@class,'bullet-item-v2')]"))
+                    except TimeoutException:
+                        print("No years found")
+                        count1 += 1
+                        continue
+
+                    # print(len(years), end=" | ") # comment out when code is confirmed to work
+                    # print(len(descriptions), end=" | ")
+
                     for e in years:
                         if 'yrs' in e.get_attribute('innerText'):
                             years_array.append(e.get_attribute('innerText'))
                         elif 'mos' in e.get_attribute('innerText'):
                             years_array.append(e.get_attribute('innerText'))
+
+                    try:
+                        descriptions = WebDriverWait(driver, 5).until(lambda driver: driver.find_elements_by_xpath(
+                            "//h4[contains(@class,'date-range')]"))
+                    except TimeoutException:
+                        print("No descriptions found")
+                        count1 += 1
+                        continue
+                    else:
+                        driver.execute_script('arguments[0].scrollIntoView(true);', descriptions[len(descriptions)-1])
 
                     for e in descriptions:
                         descriptions_array.append(e.get_attribute('innerText').lower())
@@ -382,7 +422,7 @@ def setup():
                                 education_years.append(int(e.get_attribute("innerText")))
                         age = (2019 - min(education_years)) + 18
                         print('~' + str(age) + ' years old', end=" | ")
-                        if min(education_years) < 2003:
+                        if min(education_years) < 2001:
                             print("Above Maximum Age")
                             errors.append(results[count1] + " - outside age range")
                             count1 += 1
@@ -393,7 +433,7 @@ def setup():
                             count1 += 1
                             continue
                         else:
-                            if total_experience >= 16:
+                            if total_experience >= 18:
                                 print("Above Maximum Experience")
                                 errors.append(results[count1] + " - outside experience range")
                                 count1 += 1
