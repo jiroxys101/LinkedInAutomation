@@ -162,7 +162,7 @@ def countdown(t):
         sys.stdout.flush()
         time.sleep(1)
         t -= 1
-    print("Starting!")
+    print(" Starting!")
 
 
 countdown(pause_time)
@@ -221,152 +221,147 @@ def setup():
         print(str(num) + " profiles")
 
     total_time = 0
+    try:
+        while count3 < num:
+                if count2 < 5:  # test
+                    if count1 != 0:
+                        if count1 % 15 == 0:  # test
+                            driver.get('http://www.google.com')
+                            print('Threshold met. Waiting at Google')
+                            countdown(random.randint(1800, 3600))
+                            print(str(count1 + 1), end=" | ")
+                        else:
+                            print(str(count1 + 1), end=" | ")
+                    else:
+                        print(str(count1 + 1), end=" | ")
 
-    while count3 < num:
-        try:
-            if count2 < 5:  # test
-                start_time = time.time()
+                    start_time = time.time()
 
-                #  refresh page if it takes longer than 10 seconds to load
+                    #  refresh page if it takes longer than 10 seconds to load
 
-                while True:
                     try:
                         driver.get(results[count1])
                     except TimeoutException:
                         continue
-                    else:
+                    except IndexError:
+                        print("End of list reached")
                         break
 
-                # check for name
+                    # check for name
 
-                lenOfPage = driver.execute_script(
-                    "window.scrollTo(0, document.body.scrollHeight);"
-                    "var lenOfPage=document.body.scrollHeight;return lenOfPage;")
-
-                footer_xpath = '//p[contains(@id, "globalfooter-copyright")]'
-                body = driver.find_element_by_css_selector('body')
-                experience_see_more = "//button[contains(@class,'pv-experience-section')]"
-                see_more_xpath = "//button[contains(@class,'additional-skills')]"
-
-                match = False
-                while match is False:
-                    lastCount = lenOfPage
-                    time.sleep(2)
                     lenOfPage = driver.execute_script(
-                        "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
-                    if lastCount == lenOfPage:
-                        match = True
-                time.sleep(1)
-                scroll = 0
-                while scroll < 1:
-                    scroll += 0.1
-                    body.send_keys(Keys.PAGE_UP)
-                    time.sleep(0.5)
-                time.sleep(1)
+                        "window.scrollTo(0, document.body.scrollHeight);"
+                        "var lenOfPage=document.body.scrollHeight;return lenOfPage;")
 
-                try:
-                    experience_button = WebDriverWait(driver, 5).until(
-                        lambda driver: driver.find_element_by_xpath(experience_see_more))
-                except TimeoutException:
-                    pass
-                else:
-                    actions.move_to_element(experience_button).perform()
-                    driver.execute_script('arguments[0].click();', experience_button)
+                    footer_xpath = '//p[contains(@id, "globalfooter-copyright")]'
+                    body = driver.find_element_by_css_selector('body')
+                    experience_see_more = "//button[contains(@class,'see-more-inline')]"
+                    see_more_xpath = "//button[contains(@class,'additional-skills')]"
 
-                try:
-                    see_more_element = WebDriverWait(driver, 15).until(
-                        lambda driver: driver.find_element_by_xpath(see_more_xpath))
-                except TimeoutException:
-                    errors.append(results[count1])
-                    count1 += 1
-                    count2 += 1
-                    print("No Skills listed. Skipping...")
-                    time.sleep(random.randint(5, 15))
-                    continue
-                else:
-                    driver.execute_script('arguments[0].click();', see_more_element)
+                    match = False
+                    while match is False:
+                        lastCount = lenOfPage
+                        time.sleep(2)
+                        lenOfPage = driver.execute_script(
+                            "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+                        if lastCount == lenOfPage:
+                            match = True
+                    time.sleep(1)
+                    scroll = 0
+                    while scroll < 1:
+                        scroll += 0.02
+                        body.send_keys(Keys.ARROW_UP)
+                        time.sleep(0.05)
+                    time.sleep(1)
 
-                elems = WebDriverWait(driver, 5).until(lambda driver: driver.find_elements_by_xpath(
-                    "//span[contains(@class, 'pv-skill-category-entity')]"))
-
-                skill_list = []
-                skill_variable = 'interpersonal'
-
-                years = WebDriverWait(driver, 15).until(lambda driver: driver.find_elements_by_xpath(
-                    "//span[contains(@class,'bullet-item-v2')]"))
-                descriptions = WebDriverWait(driver, 15).until(lambda driver: driver.find_elements_by_xpath(
-                    "//h4[contains(@class,'date-range')]"))
-
-                years_array = []
-                present_array = []
-                descriptions_array = []
-                for e in years:
-                    years_array.append(e.get_attribute('innerText'))
-                for e in descriptions:
-                    descriptions_array.append(e.get_attribute('innerText').lower())
-                print(str(count1 + 1) + " | " + str(years_array).strip('[]'), end=" | ")
-                total_experience = 0
-                loop_count = 0
-                for e in years_array:
-                    experience = e.split()
-                    if "yrs" in experience:
-                        yrs_index = experience.index("yrs") - 1
-                        yrs = int(int(experience[yrs_index]) * 12)
-                    else:
-                        yrs = 0
-                    if "mos" in experience:
-                        mos_index = experience.index("mos") - 1
-                        mos = int(experience[mos_index])
-                    else:
-                        mos = 0
-                    experience_time = yrs + mos
-                    if 'present' in descriptions_array[loop_count]:
-                        present_array.append(experience_time)
-                    else:
-                        total_experience += experience_time
-                        present_array.append(0)
-                    loop_count += 1
-                total_experience = round(total_experience / 12, 2) + round(max(present_array) / 12, 2)
-                print(str(total_experience) + " years experience", end=" | ")
-
-                education_x_path = "(//time)"
-                education_years = []
-                try:
-                    education_times = WebDriverWait(driver, 15).until(
-                        lambda driver: driver.find_elements_by_xpath(education_x_path))
-                except TimeoutException:
-                    print("No Education Years Present | ", end=" | ")
-                    if total_experience >= 16:
-                        print("Above Maximum Experience")
-                        errors.append(results[count1] + " - outside experience range")
+                    try:
+                        see_more_element = WebDriverWait(driver, 7).until(
+                            lambda driver: driver.find_element_by_xpath(see_more_xpath))
+                    except TimeoutException:
+                        errors.append(results[count1])
                         count1 += 1
-                        continue
-                    elif total_experience < 1:
-                        print("Below Minimum Experience")
-                        errors.append(results[count1] + " - outside experience range")
-                        count1 += 1
+                        count2 += 1
+                        print("No Skills listed. Skipping...")
+                        time.sleep(random.randint(1, 6))
                         continue
                     else:
-                        print("Within Experience Demographic", end=" | ")
-                else:
-                    for e in education_times:
-                        if re.search('[a-zA-Z]', e.get_attribute("innerText")):
-                            education_years.append(e.get_attribute("innerText").lower())
+                        driver.execute_script('arguments[0].click();', see_more_element)
+
+                    elems = WebDriverWait(driver, 5).until(lambda driver: driver.find_elements_by_xpath(
+                        "//span[contains(@class, 'pv-skill-category-entity')]"))
+
+                    skill_list = []
+                    skill_variable = 'interpersonal'
+
+                    try:
+                        descriptions = WebDriverWait(driver, 5).until(lambda driver: driver.find_elements_by_xpath(
+                            "//h4[contains(@class,'date-range')]"))
+                    except TimeoutException:
+                        print("No descriptions found", end=' | ')
+                    else:
+                        last_element = int(len(descriptions) - 1)
+                        driver.execute_script('arguments[0].scrollIntoView(true);', descriptions[last_element])
+
+                    try:
+                        experience_button = WebDriverWait(driver, 5).until(
+                            lambda driver: driver.find_element_by_xpath(experience_see_more))
+                    except TimeoutException:
+                        print("No Experience Button Found", end=" | ")
+                    else:
+                        driver.execute_script('arguments[0].scrollIntoView(true);', experience_button)
+                        driver.execute_script('arguments[0].click();', experience_button)
+
+                    descriptions = WebDriverWait(driver, 7).until(lambda driver: driver.find_elements_by_xpath(
+                        "//h4[contains(@class,'date-range')]"))
+                    years = WebDriverWait(driver, 7).until(lambda driver: driver.find_elements_by_xpath(
+                        "//span[contains(@class,'bullet-item-v2')]"))
+
+                    print(len(years), end=" | ") # comment out when code is confirmed to work
+                    print(len(descriptions), end=" | ")
+
+                    years_array = []
+                    present_array = []
+                    descriptions_array = []
+                    for e in years:
+                        if 'yrs' in e.get_attribute('innerText'):
+                            years_array.append(e.get_attribute('innerText'))
+                        elif 'mos' in e.get_attribute('innerText'):
+                            years_array.append(e.get_attribute('innerText'))
+
+                    for e in descriptions:
+                        descriptions_array.append(e.get_attribute('innerText').lower())
+                    print(str(years_array).strip('[]'), end=" | ")
+                    total_experience = 0
+                    loop_count = 0
+                    for e in years_array:
+                        experience = e.split()
+                        if "yrs" in experience:
+                            yrs_index = experience.index("yrs") - 1
+                            yrs = int(int(experience[yrs_index]) * 12)
                         else:
-                            education_years.append(int(e.get_attribute("innerText")))
-                    age = (2019 - min(education_years)) + 18
-                    print('~' + str(age) + ' years old', end=" | ")
-                    if min(education_years) < 2003:
-                        print("Above Maximum Age")
-                        errors.append(results[count1] + " - outside age range")
-                        count1 += 1
-                        continue
-                    elif max(education_years) > 2019:
-                        print("Below Minimum Age")
-                        errors.append(results[count1] + " - currently student")
-                        count1 += 1
-                        continue
-                    else:
+                            yrs = 0
+                        if "mos" in experience:
+                            mos_index = experience.index("mos") - 1
+                            mos = int(experience[mos_index])
+                        else:
+                            mos = 0
+                        experience_time = yrs + mos
+                        if 'present' in descriptions_array[loop_count]:
+                            present_array.append(experience_time)
+                        else:
+                            total_experience += experience_time
+                            present_array.append(0)
+                        loop_count += 1
+                    total_experience = round(total_experience / 12, 2) + round(max(present_array) / 12, 2)
+                    print(str(total_experience) + " years experience", end=" | ")
+
+                    education_x_path = "(//time)"
+                    education_years = []
+                    try:
+                        education_times = WebDriverWait(driver, 7).until(
+                            lambda driver: driver.find_elements_by_xpath(education_x_path))
+                    except TimeoutException:
+                        print("No Education Years Present | ", end=" | ")
                         if total_experience >= 16:
                             print("Above Maximum Experience")
                             errors.append(results[count1] + " - outside experience range")
@@ -378,202 +373,233 @@ def setup():
                             count1 += 1
                             continue
                         else:
-                            print("Within Age & Experience Demographic | ", end=" | ")
-
-
-                for elem in elems:
-                    skill = str(elem.text.lower())
-                    skill_list.append(skill)
-
-                if any('leader' in s for s in skill_list):
-                    skill_variable = "leadership"
-                else:
-                    if any('management' in s for s in skill_list):
-                        skill_variable = "management"
+                            print("Within Experience Demographic", end=" | ")
                     else:
-                        skill_variable = "interpersonal"
+                        for e in education_times:
+                            if re.search('[a-zA-Z]', e.get_attribute("innerText")):
+                                education_years.append(e.get_attribute("innerText").lower())
+                            else:
+                                education_years.append(int(e.get_attribute("innerText")))
+                        age = (2019 - min(education_years)) + 18
+                        print('~' + str(age) + ' years old', end=" | ")
+                        if min(education_years) < 2003:
+                            print("Above Maximum Age")
+                            errors.append(results[count1] + " - outside age range")
+                            count1 += 1
+                            continue
+                        elif max(education_years) > 2019:
+                            print("Below Minimum Age")
+                            errors.append(results[count1] + " - currently student")
+                            count1 += 1
+                            continue
+                        else:
+                            if total_experience >= 16:
+                                print("Above Maximum Experience")
+                                errors.append(results[count1] + " - outside experience range")
+                                count1 += 1
+                                continue
+                            elif total_experience < 1:
+                                print("Below Minimum Experience")
+                                errors.append(results[count1] + " - outside experience range")
+                                count1 += 1
+                                continue
+                            else:
+                                print("Within Age & Experience Demographic | ", end=" | ")
 
-                name_xpath = "//li[contains(@class,'t-24')]"
 
-                try:
-                    name_element = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath(name_xpath))
-                    full_name = name_element.get_attribute('innerText')
-                    full_name = str(full_name.title())
-                    full_name = full_name.strip()
-                    first_name = full_name.split(" ", 1)[0]
-                except TimeoutException:
-                    print("Name not found. Skipping...")
-                    driver.save_screenshot('screenie.png')
-                    errors.append(results[count1])
-                    count1 += 1
-                    count2 += 1
-                    time.sleep(random.randint(5, 15))
-                    continue
-                time.sleep(random.randint(1, 3))  # test
+                    for elem in elems:
+                        skill = str(elem.text.lower())
+                        skill_list.append(skill)
 
-                area_list = ["new york", "new jersey", "toronto", "mississauga", "brampton", "scarborough", "philadelphia",
-                             "connecticut", "maryland", "washington d.c.", "delaware", "washington, district of columbia",
-                             "virginia", "pennsylvania", "ontario", "united states"]
-                location_xpath = "//li[contains(@class,'t-16 t-black t-normal inline-block')]"
-                try:
-                    location_element = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath
-                    (location_xpath))
-                    location = str(location_element.get_attribute('innerText')).lower()
-                    print(location.title() + " | ", end=" | ")
-                    if any(sub in location for sub in area_list):
-                        print("|", end=" | ")
+                    if any('leader' in s for s in skill_list):
+                        skill_variable = "leadership"
                     else:
-                        errors.append(results[count1] + " - outside location area - " + location)
-                        count1 += 1
-                        print("Invalid location. Skipping...")
-                        time.sleep(random.randint(2, 18))
-                        continue
-                except TimeoutException:
-                    errors.append(results[count1])
-                    count1 += 1
-                    print("Error: No location area detected")
-                    time.sleep(random.randint(5, 15))
-                    continue
+                        if any('management' in s for s in skill_list):
+                            skill_variable = "management"
+                        else:
+                            skill_variable = "interpersonal"
 
-                #check for position
+                    name_xpath = "//li[contains(@class,'t-24')]"
 
-                current_position_xpath = "//h4[contains(@class,'date-range')]"
-                try:
-                    current_position_element = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath
-                    (current_position_xpath))
-                    position = str(current_position_element.get_attribute('innerHTML')).lower()
-                    if "present" in position:
-                        print("Employed" + " | ", end=" | ")
-                    else:
-                        errors.append(results[count1] + " - Not Currently Employed")
-                        count1 += 1
-                        print("Not Currently Employed")
-                        time.sleep(random.randint(2, 18))
-                        continue
-                except TimeoutException:
-                    errors.append(results[count1] + " - No current position")
-                    count1 += 1
-                    count2 += 1
-                    print("No current position")
-                    time.sleep(random.randint(2, 18))
-                    continue
-                message_script = "Hi " + first_name + ". I was impressed with your profile;" \
-                                 " particularly your endorsements for your " + skill_variable + " skills." \
-                                 " I represent a business development organization looking to expand its partnerships." \
-                                 " Have you thought about using your skills to develop a business outside of what you do?"
-
-                try:
-                    connectButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class, 'connect')]"))
-                    elem_class = str(connectButtonElement.get_attribute("class")).lower()
-                    if "disabled" not in elem_class:
-                        driver.execute_script('arguments[0].click();', connectButtonElement)
-                    else:
-                        count1 += 1
-                        print("Invite pending. Skipping...")
-                        time.sleep(random.randint(4, 11))
-                        continue
-                except TimeoutException:
-                    body.send_keys(Keys.HOME)
-                    time.sleep(3)
-                    print(' | Checking DropDown |', end=" | ")
                     try:
-                        moreElement = WebDriverWait(driver, 5).until(
-                            lambda driver: driver.find_element_by_xpath("//button[contains(@class,'overflow-toggle')]"))
+                        name_element = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath(name_xpath))
+                        full_name = name_element.get_attribute('innerText')
+                        full_name = str(full_name.title())
+                        full_name = full_name.strip()
+                        first_name = full_name.split(" ", 1)[0]
+                    except TimeoutException:
+                        print("Name not found. Skipping...")
+                        driver.save_screenshot('screenie.png')
+                        errors.append(results[count1])
+                        count1 += 1
+                        count2 += 1
+                        time.sleep(random.randint(1, 6))
+                        continue
+
+                    area_list = ["new york", "new jersey", "toronto", "mississauga", "brampton", "scarborough", "philadelphia",
+                                 "connecticut", "maryland", "washington d.c.", "delaware", "washington, district of columbia",
+                                 "virginia", "pennsylvania", "ontario", "united states"]
+                    location_xpath = "//li[contains(@class,'t-16 t-black t-normal inline-block')]"
+                    try:
+                        location_element = WebDriverWait(driver, 7).until(lambda driver: driver.find_element_by_xpath
+                        (location_xpath))
+                        location = str(location_element.get_attribute('innerText')).lower()
+                        print(location.title() + " | ", end=" | ")
+                        if any(sub in location for sub in area_list):
+                            print("|", end=" | ")
+                        else:
+                            errors.append(results[count1] + " - outside location area - " + location)
+                            count1 += 1
+                            print("Invalid location. Skipping...")
+                            time.sleep(random.randint(1, 6))
+                            continue
+                    except TimeoutException:
+                        errors.append(results[count1])
+                        count1 += 1
+                        print("Error: No location area detected")
+                        time.sleep(random.randint(1, 6))
+                        continue
+
+                    #check for position
+
+                    current_position_xpath = "//h4[contains(@class,'date-range')]"
+                    try:
+                        current_position_element = WebDriverWait(driver, 7).until(lambda driver: driver.find_element_by_xpath
+                        (current_position_xpath))
+                        position = str(current_position_element.get_attribute('innerHTML')).lower()
+                        if "present" in position:
+                            print("Employed" + " | ", end=" | ")
+                        else:
+                            errors.append(results[count1] + " - Not Currently Employed")
+                            count1 += 1
+                            print("Not Currently Employed")
+                            time.sleep(random.randint(1, 6))
+                            continue
+                    except TimeoutException:
+                        errors.append(results[count1] + " - No current position")
+                        count1 += 1
+                        count2 += 1
+                        print("No current position")
+                        time.sleep(random.randint(1, 6))
+                        continue
+                    message_script = "Hi " + first_name + ". I was impressed with your profile;" \
+                                     " particularly your endorsements for your " + skill_variable + " skills." \
+                                     " I represent a business development organization looking to expand its partnerships." \
+                                     " Have you thought about using your skills to develop a business outside of what you do?"
+
+                    try:
+                        connectButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class, 'connect')]"))
+                        elem_class = str(connectButtonElement.get_attribute("class")).lower()
+                        if "disabled" not in elem_class:
+                            driver.execute_script('arguments[0].click();', connectButtonElement)
+                        else:
+                            count1 += 1
+                            print("Invite pending. Skipping...")
+                            time.sleep(random.randint(1, 6))
+                            continue
+                    except TimeoutException:
+                        body.send_keys(Keys.HOME)
+                        time.sleep(3)
+                        print(' | Checking DropDown |', end=" | ")
+                        try:
+                            moreElement = WebDriverWait(driver, 5).until(
+                                lambda driver: driver.find_element_by_xpath("//button[contains(@class,'overflow-toggle')]"))
+                            time.sleep(1)
+                            moreElement.click()
+                        except TimeoutException:
+                            errors.append(results[count1])
+                            count1 += 1
+                            print("Error: No More Button detected")
+                            time.sleep(random.randint(1, 6))
+                            continue
+
+                        try:
+                            connectListElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//artdeco-dropdown-item[contains(@class, 'connect')]"))
+                        except TimeoutException:
+                            errors.append(results[count1])
+                            count1 += 1
+                            print("Connect Button Timeout. Skipping...")
+                            continue
+                        else:
+                            print(' | Dropdown Connect Found |', end=" | ")
+                            time.sleep(3)
+                            if 'remove' in connectListElement.get_attribute('innerHTML').lower():
+                                print('Connection already added')
+                                count1 += 1
+                                continue
+                            else:
+                                driver.execute_script('arguments[0].click();', connectListElement)
+                                print(' | Click 1 |', end=" | ")
+                            time.sleep(3)
+                    print(' | Checking for Add a Note |', end=" | ")
+                    try:
+                        addNoteElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Add a note')]"))
+                    except TimeoutException:
+                        errors.append(results[count1])
+                        count1 += 1
+                        print("Error: No Add Note Button detected")
+                        time.sleep(random.randint(1, 6))
+                        continue
+                    else:
                         time.sleep(1)
-                        moreElement.click()
-                    except TimeoutException:
-                        errors.append(results[count1])
-                        count1 += 1
-                        print("Error: No More Button detected")
-                        time.sleep(random.randint(4, 11))
-                        continue
-
+                        driver.execute_script('arguments[0].click();', addNoteElement)
+                    time.sleep(1)
                     try:
-                        connectListElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//artdeco-dropdown-item[contains(@class, 'connect')]"))
+                        WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
                     except TimeoutException:
                         errors.append(results[count1])
                         count1 += 1
-                        print("Connect Button Timeout. Skipping...")
+                        print("Error: No Message Area detected")
+                        time.sleep(random.randint(1, 6))
                         continue
                     else:
-                        print(' | Dropdown Connect Found |', end=" | ")
-                        time.sleep(10)
-                        driver.execute_script('arguments[0].click();', connectListElement)
-                        print(' | Click 1 |', end=" | ")
-                        time.sleep(10)
-                print(' | Checking for Add a Note |', end=" | ")
-                try:
-                    addNoteElement = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Add a note')]"))
-                except TimeoutException:
-                    errors.append(results[count1])
-                    count1 += 1
-                    print("Error: No Add Note Button detected")
-                    time.sleep(random.randint(4, 11))
-                    continue
+                        textAreaElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
+                        textAreaElement.send_keys(message_script)
+                    time.sleep(2.5)
+                    try:
+                        sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send ')]"))
+                        driver.execute_script('arguments[0].click();', sendButtonElement)
+                        time.sleep(random.randint(1, 6))
+                        end_time = time.time() - start_time
+                        total_time += end_time
+
+                        print(str(count3 + 1) + " - " + str(round(end_time, 2)) + " seconds")
+                        count1 += 1
+                        count3 += 1
+                        count2 = 0
+
+                    except TimeoutException:
+                        errors.append(results[count1])
+                        count1 += 1
+                        print("Error: No send button detected")
+                        time.sleep(random.randint(1, 6))
+                        continue
                 else:
-                    time.sleep(2)
-                    driver.execute_script('arguments[0].click();', addNoteElement)
-                time.sleep(3)
-                try:
-                    WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
-                except TimeoutException:
-                    errors.append(results[count1])
-                    count1 += 1
-                    print("Error: No Message Area detected")
-                    time.sleep(random.randint(4, 11))
-                    continue
-                else:
-                    textAreaElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
-                    textAreaElement.send_keys(message_script)
-                time.sleep(2.5)
-                try:
-                    sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send ')]"))
-                    driver.execute_script('arguments[0].click();', sendButtonElement)
-                    time.sleep(random.randint(1, 20))
-                    end_time = time.time() - start_time
-                    total_time += end_time
+                    driver.quit()
+                    break
+    except TimeoutException:
+        logging.error(traceback.print_exc())
+        message = str(os.path.basename(__file__)) + ' experienced an unhandled TimeoutException.' + '\n' + '\n' + str(traceback.format_exc())
+        print(message)
+        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+            server.login(sender_email, notification_password)
+            server.sendmail(sender_email, receiver_email, message)
+        sys.exit()
 
-                    print(str(count3 + 1) + " - " + str(round(end_time, 2)) + " seconds")
-                    count1 += 1
-                    count3 += 1
-                    count2 = 0
-
-                    if count1 % 15 == 0:
-                        driver.get('http://www.google.com')
-                        countdown(random.randint(18, 36))
-
-                except TimeoutException:
-                    errors.append(results[count1])
-                    count1 += 1
-                    print("Error: No send button detected")
-                    time.sleep(random.randint(4, 11))
-                    continue
-            else:
-                driver.quit()
-                break
-        except TimeoutException:
-            logging.error(traceback.print_exc())
-            message = str(os.path.basename(__file__)) + ' experienced an unhandled TimeoutException.' + '\n' + '\n' + str(traceback.format_exc())
-            print(message)
-            with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-                server.login(sender_email, notification_password)
-                server.sendmail(sender_email, receiver_email, message)
-            sys.exit()
-
-        except Exception as p:
-            logging.error(traceback.print_exc())
-            message = str(os.path.basename(__file__)) + ' has failed.' + '\n' + '\n' + str(traceback.format_exc())
-            print(message)
-            with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-                server.login(sender_email, notification_password)
-                server.sendmail(sender_email, receiver_email, message)
-            sys.exit()
-        else:
-            message = str(os.path.basename(__file__)) + ' has terminated successfully.'
-            print(message)
-            with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-                server.login(sender_email, notification_password)
-                server.sendmail(sender_email, receiver_email, message)
+    except Exception as p:
+        logging.error(traceback.print_exc())
+        message = str(os.path.basename(__file__)) + ' has failed.' + '\n' + '\n' + str(traceback.format_exc())
+        print(message)
+        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+            server.login(sender_email, notification_password)
+            server.sendmail(sender_email, receiver_email, message)
+        sys.exit()
+    else:
+        message = str(os.path.basename(__file__)) + ' has terminated successfully.'
+        print(message)
+        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+            server.login(sender_email, notification_password)
+            server.sendmail(sender_email, receiver_email, message)
 
     time.sleep(3)
 
