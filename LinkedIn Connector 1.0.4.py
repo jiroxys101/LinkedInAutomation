@@ -151,7 +151,7 @@ while is_int:
         is_int = False
     else:
         is_int = True
-        print("Sorry.  That value is not an integer.", end=" ")
+        print("Sorry.  That value is not an integer.", end=" | ")
 
 print("Pausing for " + str(pause_time) + " seconds")
 
@@ -190,7 +190,7 @@ def setup():
     email_field_id = "username"
     pass_field_id = "password"
     login_button_xpath = "//button[contains(@type,'submit')]"
-    print("Logging in...", end=" ")
+    print("Logging in...", end=" | ")
     driver.save_screenshot('screenie.png')
     agent = driver.execute_script("return navigator.userAgent")
     print(str(agent))
@@ -304,7 +304,7 @@ def setup():
                     years_array.append(e.get_attribute('innerText'))
                 for e in descriptions:
                     descriptions_array.append(e.get_attribute('innerText').lower())
-                print(years_array)
+                print(str(count1 + 1) + " | " + years_array, end=" | ")
                 total_experience = 0
                 loop_count = 0
                 for e in years_array:
@@ -324,9 +324,10 @@ def setup():
                         present_array.append(experience_time)
                     else:
                         total_experience += experience_time
+                        present_array.append(0)
                     loop_count += 1
                 total_experience = round(total_experience / 12, 2) + round(max(present_array) / 12, 2)
-                print(str(total_experience) + " years experience")
+                print(str(total_experience) + " years experience", end=" | ")
 
                 education_x_path = "(//time)"
                 education_years = []
@@ -334,7 +335,7 @@ def setup():
                     education_times = WebDriverWait(driver, 15).until(
                         lambda driver: driver.find_elements_by_xpath(education_x_path))
                 except TimeoutException:
-                    print("No Education Years Present | ", end=" ")
+                    print("No Education Years Present | ", end=" | ")
                     if total_experience >= 16:
                         print("Above Maximum Experience")
                         errors.append(results[count1] + " - outside experience range")
@@ -354,7 +355,7 @@ def setup():
                         else:
                             education_years.append(int(e.get_attribute("innerText")))
                     age = (2019 - min(education_years)) + 18
-                    print('~' + str(age) + ' years old', end=" ")
+                    print('~' + str(age) + ' years old', end=" | ")
                     if min(education_years) < 2003:
                         print("Above Maximum Age")
                         errors.append(results[count1] + " - outside age range")
@@ -418,9 +419,9 @@ def setup():
                     location_element = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath
                     (location_xpath))
                     location = str(location_element.get_attribute('innerText')).lower()
-                    print(location.title() + " | ", end=" ")
+                    print(location.title() + " | ", end=" | ")
                     if any(sub in location for sub in area_list):
-                        print("|", end=" ")
+                        print("|", end=" | ")
                     else:
                         errors.append(results[count1] + " - outside location area - " + location)
                         count1 += 1
@@ -442,7 +443,7 @@ def setup():
                     (current_position_xpath))
                     position = str(current_position_element.get_attribute('innerHTML')).lower()
                     if "present" in position:
-                        print("Employed" + " | ", end=" ")
+                        print("Employed" + " | ", end=" | ")
                     else:
                         errors.append(results[count1] + " - Not Currently Employed")
                         count1 += 1
@@ -474,7 +475,7 @@ def setup():
                 except TimeoutException:
                     body.send_keys(Keys.HOME)
                     time.sleep(3)
-                    print(' | Checking DropDown |', end=" ")
+                    print(' | Checking DropDown |', end=" | ")
                     try:
                         moreElement = WebDriverWait(driver, 5).until(
                             lambda driver: driver.find_element_by_xpath("//button[contains(@class,'overflow-toggle')]"))
@@ -495,12 +496,12 @@ def setup():
                         print("Connect Button Timeout. Skipping...")
                         continue
                     else:
-                        print(' | Dropdown Connect Found |', end=" ")
+                        print(' | Dropdown Connect Found |', end=" | ")
                         time.sleep(10)
                         driver.execute_script('arguments[0].click();', connectListElement)
-                        print(' | Click 1 |', end=" ")
+                        print(' | Click 1 |', end=" | ")
                         time.sleep(10)
-                print(' | Checking for Add a Note |', end=" ")
+                print(' | Checking for Add a Note |', end=" | ")
                 try:
                     addNoteElement = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Add a note')]"))
                 except TimeoutException:
@@ -539,7 +540,7 @@ def setup():
 
                     if count1 % 15 == 0:
                         driver.get('http://www.google.com')
-                        countdown(random.randint(1800, 5400))
+                        countdown(random.randint(18, 36))
 
                 except TimeoutException:
                     errors.append(results[count1])
@@ -567,8 +568,6 @@ def setup():
                 server.login(sender_email, notification_password)
                 server.sendmail(sender_email, receiver_email, message)
             sys.exit()
-
-
         else:
             message = str(os.path.basename(__file__)) + ' has terminated successfully.'
             print(message)
