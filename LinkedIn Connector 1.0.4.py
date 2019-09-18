@@ -266,16 +266,6 @@ def setup():
                     time.sleep(1)
 
                     try:
-                        experience_button = WebDriverWait(driver, 15).until(
-                            lambda driver: driver.find_element_by_xpath(experience_see_more))
-                    except TimeoutException:
-                        print("No Experience Button", end=" | ")
-                    else:
-                        actions.move_to_element(experience_button).perform()
-                        time.sleep(2)
-                        driver.execute_script('arguments[0].click();', experience_button)
-
-                    try:
                         see_more_element = WebDriverWait(driver, 15).until(
                             lambda driver: driver.find_element_by_xpath(see_more_xpath))
                     except TimeoutException:
@@ -287,6 +277,20 @@ def setup():
                         continue
                     else:
                         driver.execute_script('arguments[0].click();', see_more_element)
+
+                    for x in range(1, 10):
+                        body.send_keys(Keys.PAGE_UP)
+                        time.sleep(0.5)
+
+                    try:
+                        experience_button = WebDriverWait(driver, 15).until(
+                            lambda driver: driver.find_element_by_xpath(experience_see_more))
+                    except TimeoutException:
+                        print("No Experience Button", end=" | ")
+                    else:
+                        actions.move_to_element(experience_button).perform()
+                        time.sleep(2)
+                        driver.execute_script('arguments[0].click();', experience_button)
 
                     elems = WebDriverWait(driver, 5).until(lambda driver: driver.find_elements_by_xpath(
                         "//span[contains(@class, 'pv-skill-category-entity')]"))
