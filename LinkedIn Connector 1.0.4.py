@@ -304,7 +304,7 @@ def setup():
                     years_array.append(e.get_attribute('innerText'))
                 for e in descriptions:
                     descriptions_array.append(e.get_attribute('innerText').lower())
-                print(str(count1 + 1) + " | " + years_array, end=" | ")
+                print(str(count1 + 1) + " | " + str(years_array).strip('[]'), end=" | ")
                 total_experience = 0
                 loop_count = 0
                 for e in years_array:
