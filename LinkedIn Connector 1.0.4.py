@@ -215,23 +215,23 @@ def setup():
     count2 = 0  # counter to check for recurring instances of NoSuchElement Exceptions
     count3 = 0  # counter to keep track of successful sent invitations
 
-    if len(results) < 150:
+    if len(results) < 300:
         num = len(results)
         print(str(num) + " profiles left")
 
     else:
-        num = random.randint(140, 160)  # set to 5 for testing
+        num = random.randint(250, 350)  # set to 5 for testing
         print(str(num) + " profiles")
 
-    total_time = 0
+    total_time = 0                             
     try:
         while count3 < num:
                 if count2 < 5:  # test
                     if count1 != 0:
-                        if count1 % 15 == 0:  # test
+                        if count1 % 25 == 0:  # test
                             driver.get('http://www.google.com')
                             print('Threshold met. Waiting at Google')
-                            countdown(random.randint(1800, 3600))
+                            countdown(random.randint(1800, 5400))
                             print(str(count1 + 1), end=" | ")
                         else:
                             print(str(count1 + 1), end=" | ")

@@ -220,7 +220,7 @@ def setup():
         print(str(num) + " profiles left")
 
     else:
-        num = random.randint(100, 250)  # set to 5 for testing
+        num = random.randint(100, 200)  # set to 5 for testing
         print(str(num) + " profiles")
 
     total_time = 0                             

@@ -13,6 +13,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 import datetime
 from datetime import datetime
 import requests
+import browsermobproxy
+from browsermobproxy import Server
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 d = datetime.now().strftime("%I:%M %p")
@@ -124,7 +127,15 @@ bunji = os.getenv("USERNAME")
 userProfile = "C:\\Users\\" + bunji + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
 chrome_options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors", "safebrowsing-disable-download-protection", "safebrowsing-disable-auto-update", "disable-client-side-phishing-detection"])
 
+server = Server('C:\\Users\\Rijul.Kumar\\PycharmProjects\\LinkedInAutomation\\browsermob-proxy-2.1.4\\bin\\browsermob-proxy')
+server.start()
+proxy = server.create_proxy()
+caps = DesiredCapabilities.CHROME
+caps.setCapability(chrome_options.to_capabilities(), caps)
+caps.setCapability("acceptInsecureCerts")
+chrome_options.add_argument("--proxy-server={0}".format(proxy.proxy)) #Configure chrome options
 chrome_options.add_argument("user-data-dir={}".format(userProfile))
+chrome_options.add_argument("--test-type")
 chrome_options.add_argument('--disable-extensions')
 chrome_options.add_argument('--profile-directory=Default')
 chrome_options.add_argument("--incognito")
@@ -158,7 +169,9 @@ countdown(pause_time)
 
 
 def setup():
-    driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver)
+    driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver, desired_capabilities=caps)
+    driver.get('https://www.whatismyip.com/')
+    time.sleep(10)
     driver.get('https://www.linkedin.com/uas/login?trk=guest_homepage-basic_nav-header-signin')
     driver.set_page_load_timeout(60)
 
