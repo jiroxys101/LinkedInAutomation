@@ -215,12 +215,12 @@ def setup():
     count2 = 0  # counter to check for recurring instances of NoSuchElement Exceptions
     count3 = 0  # counter to keep track of successful sent invitations
 
-    if len(results) < 300:
+    if len(results) < 150:
         num = len(results)
         print(str(num) + " profiles left")
 
     else:
-        num = random.randint(250, 350)  # set to 5 for testing
+        num = random.randint(100, 250)  # set to 5 for testing
         print(str(num) + " profiles")
 
     total_time = 0                             
