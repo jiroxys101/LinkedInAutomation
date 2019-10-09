@@ -254,7 +254,7 @@ def setup():
                         salutation = random.choice(greetings1)
                     elif 6 <= current_time < 12:
                         salutation = random.choice(greetings2)
-                    elif 12 <= current_time < 17:
+                    elif 12 <= current_time < 16:
                         salutation = random.choice(greetings3)
                     elif 17 <= current_time:
                         salutation = random.choice(greetings4)
