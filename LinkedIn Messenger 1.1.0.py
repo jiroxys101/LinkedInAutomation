@@ -227,6 +227,79 @@ def setup():
         num = random.randint(100, 200)  # set to 5 for testing
         print(str(num) + " profiles")
 
+    greetings1 = ["Hi ", "Hello "]
+    greetings2 = ["Hi ", "Hello ", "Good Morning ", "Morning "]
+    greetings3 = ["Hi ", "Hello ", "Good Afternoon ", "Afternoon"]
+    greetings4 = ["Hi ", "Hello ", "Good Evening ", "Evening "]
+
+    acknowledgements = ["It is a pleasure to add you to my network!", "Pleasure to add you to my network!",
+                        "I am happy to add you to my network!", "It's a pleasure to add you to my network!",
+                        "I'm happy to add you to my network!", "It is a pleasure to e-meet you!", "It is nice to e-meet you!",
+                        "Pleasure to e-meet you!", "I am happy to e-meet you!", "It's a pleasure to e-meet you!",
+                        "It's nice to e-meet you!", "I'm happy to e-meet you!", "It is a pleasure to make your acquaintance!",
+                        "It is nice to make your acquaintance!", "Pleasure to make your acquaintance!",
+                        "I am happy to make your acquaintance!", "It's a pleasure to make your acquaintance!",
+                        "It's nice to make your acquaintance!", "I'm happy to make your acquaintance!",
+                        "It is a pleasure to be connected with you!", "Pleasure to be connected with you!",
+                        "I am happy to be connected with you!", "It's a pleasure to be connected with you!",
+                        "I'm happy to be connected with you!", "It is a pleasure to connect with you!", "It is nice to connect with you!",
+                        "Pleasure to connect with you!", "I am happy to connect with you!", "It's a pleasure to connect with you!",
+                        "It's nice to connect with you!", "I'm happy to connect with you!",
+                        "It is a pleasure to have made your acquaintance!", "It is nice to have made your acquaintance!",
+                        "Pleasure to have made your acquaintance!", "I am happy to have made your acquaintance!",
+                        "It's a pleasure to have made your acquaintance!", "It's nice to have made your acquaintance!",
+                        "I'm happy to have made your acquaintance!", "It is a pleasure to have connected with you!",
+                        "It is nice to have connected with you!", "Pleasure to have connected with you!",
+                        "I am happy to have connected with you!", "It's a pleasure to have connected with you!",
+                        "It's nice to have connected with you!", "I'm happy to have connected with you!"]
+
+    hook1_list = ["I wanted to ask if you had read the note attached to my connection request?",
+              "I would like to know whether you read the note attached to my connection request?",
+              "I was going to ask if you read the note attached to my connection request?",
+              "I was going to ask if you read the note attached to my contact request?",
+              "Did you accept my connection request because you had read the message I attached to it?",
+              "Did you accept my invitation after reading the message I had added to it?",
+              "Was it after reading the message I attached to it that you decided accept my connection request?",
+              "Did you accept my invitation because you had read the message I attached to it?",
+              "I wanted to ensure that you accepted my invitation because you do have an interest in developing your own business based on the message attached?",
+              "I wanted to make sure you accepted my invitation because you're interested in developing your own business based on the message attached?",
+              "I wanted to make sure you accepted my invitation because you have an interest in developing your own business based on the message attached?",
+              "I wanted to ensure that you accepted my invitation because you do have an interest in developing your own business based on the note attached?",
+              "I wanted to make sure you accepted my invitation because you're interested in developing your own business based on the note attached?",
+              "I wanted to make sure you accepted my invitation because you have an interest in developing your own business based on the note attached?",
+              "Is owning your owning business what drove you to accept my invitation, based on the message attached?",
+              "Was running your own business what prompted you to accept my invitation, based on the message attached to it?",
+              "Was running your own business what prompted you to accept my connection request, based on the message attached to it?",
+              "Was running your own business what prompted you to accept my connection request, based on the note attached to it?",
+              "Was running your own business what prompted you to accept my invitation, based on the message attached?",
+              "Was running your own business what prompted you to accept my connection request, based on the message attached?",
+              "Was running your own business what prompted you to accept my connection request, based on the note attached?",
+              "Was owning your own business what prompted you to accept my invitation, based on the message attached to it?",
+              "Was owning your own business what prompted you to accept my connection request, based on the message attached to it?",
+              "Was owning your own business what prompted you to accept my connection request, based on the note attached to it?",
+              "Was owning your own business what prompted you to accept my invitation, based on the message attached?",
+              "Was owning your own business what prompted you to accept my connection request, based on the message attached?",
+              "Was owning your own business what prompted you to accept my connection request, based on the note attached?",
+              "Is owning your own business what led you to accept my invitation, based on the message attached to it?",
+              "Is running your own business what led you to accept my invitation, based on the message attached to it?",
+              "Is owning your own business what led you to accept my connection request, based on the message attached to it?",
+              "Is owning your own business what led you to accept my invitation, based on the message attached?",
+              "Is running your own business what led you to accept my connection request, based on the message attached to it?",
+              "Is running your own business what led you to accept my connection request, based on the note attached to it?",
+              "Is running your own business what led you to accept my connection request, based on the note attached to it?",
+              "Is owning your own business what led you to accept my connection request, based on the note attached?",
+              "Was it after reading the note I attached to it that you decided accept my connection request?",
+              "Was it after reading the note I attached to it that you decided accept my invitation?",
+              "Was it after reading the message I attached to it that you decided accept my invitation?"]
+
+    hook2_list = ["Did you get a chance to read the message I had sent you?",
+                  "Have you had a chance to read the message I sent you?",
+                  "Have you had a chance to read the message that I sent to you?",
+                  "Did you receive the message I had sent to you?",
+                  "Did you get a chance to go through my last message?",
+                  "Did you have a chance to go through my last message?",
+                  "Did you have a chance to read the message I had sent you?"]
+
     total_time = 0                             
     try:
         while count3 < num:
@@ -235,7 +308,7 @@ def setup():
                         if count1 % 25 == 0:  # test
                             driver.get('http://www.google.com')
                             print('Threshold met. Waiting at Google')
-                            countdown(random.randint(1800, 5400))
+                            countdown(random.randint(1800, 5000))
                             print(str(count1 + 1), end=" | ")
                         else:
                             print(str(count1 + 1), end=" | ")
@@ -245,11 +318,6 @@ def setup():
                     start_time = time.time()
                     current_time = int(datetime.now().hour)
 
-                    greetings1 = ["Hi ", "Hello "]
-                    greetings2 = ["Hi ", "Hello ", "Good Morning ", "Morning "]
-                    greetings3 = ["Hi ", "Hello ", "Good Afternoon ", "Afternoon"]
-                    greetings4 = ["Hi ", "Hello ", "Good Evening ", "Evening "]
-
                     if 0 <= current_time < 6:
                         salutation = random.choice(greetings1)
                     elif 6 <= current_time < 12:
@@ -258,6 +326,10 @@ def setup():
                         salutation = random.choice(greetings3)
                     elif 17 <= current_time:
                         salutation = random.choice(greetings4)
+
+                    acknowledgement = random.choice(acknowledgements)
+                    hook1 = random.choice(hook1_list)
+                    hook2 = random.choice(hook2_list)
 
                     #  refresh page if it takes longer than 10 seconds to load
 
@@ -541,98 +613,94 @@ def setup():
                         print("No current position")
                         time.sleep(random.randint(1, 6))
                         continue
+
                     message_script = "Hi " + first_name + ". I was impressed with your profile;" \
                                      " particularly your endorsements for your " + skill_variable + " skills." \
                                      " I represent a business development organization looking to expand its partnerships." \
                                      " Have you thought about using your skills to develop a business outside of what you do?"
 
-                    try:
-                        connectButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(@class, 'connect')]"))
-                        elem_class = str(connectButtonElement.get_attribute("class")).lower()
-                        if "disabled" not in elem_class:
-                            driver.execute_script('arguments[0].click();', connectButtonElement)
-                        else:
-                            count1 += 1
-                            print("Invite pending. Skipping...")
-                            time.sleep(random.randint(1, 6))
-                            continue
-                    except TimeoutException:
-                        body.send_keys(Keys.HOME)
-                        time.sleep(3)
-                        print(' | Checking DropDown |', end=" | ")
-                        try:
-                            moreElement = WebDriverWait(driver, 5).until(
-                                lambda driver: driver.find_element_by_xpath("//button[contains(@class,'overflow-toggle')]"))
-                            time.sleep(1)
-                            moreElement.click()
+                    while True:
+                        try:  # see if their is an open message window
+                            msg_close_element = WebDriverWait(driver, 10).until(
+                                lambda driver: driver.find_element_by_xpath
+                                ("//button[contains(@class, 'msg-close')]"))
+                            print("Open Message Window. Closing...")
+                            msg_close_element.click()
+                            time.sleep(random.randint(3, 7))
                         except TimeoutException:
-                            errors.append(results[count1])
-                            count1 += 1
-                            print("Error: No More Button detected")
-                            time.sleep(random.randint(1, 6))
-                            continue
+                            break
 
-                        try:
-                            connectListElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//artdeco-dropdown-item[contains(@class, 'connect')]"))
-                        except TimeoutException:
-                            errors.append(results[count1])
+                    try:
+                        message_button_element = WebDriverWait(driver, 5).until(
+                            lambda driver: driver.find_element_by_xpath
+                            ("//button[contains(@class, 'message')]"))
+                        # actions.move_to_element(message_button_element).perform()
+                        driver.execute_script('arguments[0].click();', message_button_element)
+
+                    except TimeoutException:
+                        errors.append(results[count1])
+                        count1 += 1
+                        count2 += 1
+                        print("No Message Button. Skipping...")
+                        time.sleep(random.randint(5, 15))
+                        continue
+
+                    # script = message
+
+                    # check for previously sent
+                    try:
+                        message_area_element = WebDriverWait(driver, 5).until(
+                            lambda driver: driver.find_element_by_xpath(
+                                "//ul[contains(@class,'msg-s-message-list-content')]"))
+                        time.sleep(5)
+                        if "couldn't help but notice" in str(message_area_element.get_attribute(
+                                'innerHTML')):
+                            errors.append(results[count1] + " - already messaged")
                             count1 += 1
-                            print("Connect Button Timeout. Skipping...")
+                            print("Previously messaged. Skipping...")
+                            time.sleep(random.randint(2, 18))
                             continue
                         else:
-                            print(' | Dropdown Connect Found |', end=" | ")
-                            time.sleep(3)
-                            if 'remove' in connectListElement.get_attribute('innerHTML').lower():
-                                print('Connection already added')
-                                count1 += 1
-                                continue
-                            else:
-                                driver.execute_script('arguments[0].click();', connectListElement)
-                                print(' | Click 1 |', end=" | ")
-                            time.sleep(3)
-                    print(' | Checking for Add a Note |', end=" | ")
+                            pass
+                    except TimeoutException:
+                        pass
+                    finally:
+                        print(first_name + " | ", end=" ")  # Success - no previous message detected
+
+                    # check for text area
                     try:
-                        addNoteElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Add a note')]"))
+                        text_area_element = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath
+                        ("//div[contains(@role, 'text')]"))
                     except TimeoutException:
                         errors.append(results[count1])
                         count1 += 1
-                        print("Error: No Add Note Button detected")
-                        time.sleep(random.randint(1, 6))
+                        print("Error: No text area detected")
+                        time.sleep(random.randint(5, 15))
                         continue
-                    else:
-                        time.sleep(1)
-                        driver.execute_script('arguments[0].click();', addNoteElement)
-                    time.sleep(1)
+
                     try:
-                        WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
+                        send_button_element = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath
+                        ("//button[contains(@class, 'send-button')]"))
                     except TimeoutException:
                         errors.append(results[count1])
                         count1 += 1
-                        print("Error: No Message Area detected")
-                        time.sleep(random.randint(1, 6))
+                        count2 += 1
+                        print("Error: No Send button detected")
+                        time.sleep(random.randint(5, 15))
                         continue
                     else:
-                        textAreaElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_css_selector('textarea'))
-                        textAreaElement.send_keys(message_script)
-                    time.sleep(2.5)
-                    try:
-                        sendButtonElement = WebDriverWait(driver, 5).until(lambda driver: driver.find_element_by_xpath("//button[contains(.,'Send ')]"))
-                        driver.execute_script('arguments[0].click();', sendButtonElement)
-                        time.sleep(random.randint(1, 6))
+                        text_area_element.send_keys(script)
+                        time.sleep(5)
+                        driver.execute_script('arguments[0].click();', send_button_element)
+                        time.sleep(random.randint(1, 15))
+
                         end_time = time.time() - start_time
                         total_time += end_time
 
-                        print(str(count3 + 1) + " - " + str(round(end_time, 2)) + " seconds")
                         count1 += 1
                         count3 += 1
                         count2 = 0
-
-                    except TimeoutException:
-                        errors.append(results[count1])
-                        count1 += 1
-                        print("Error: No send button detected")
-                        time.sleep(random.randint(1, 6))
-                        continue
+                        print(str(round(end_time, 2)) + " seconds | " + str(count3))
                 else:
                     driver.quit()
                     break

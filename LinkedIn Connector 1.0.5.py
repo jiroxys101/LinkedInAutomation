@@ -231,7 +231,7 @@ def setup():
                         if count1 % 25 == 0:  # test
                             driver.get('http://www.google.com')
                             print('Threshold met. Waiting at Google')
-                            countdown(random.randint(1800, 5400))
+                            countdown(random.randint(1800, 5000))
                             print(str(count1 + 1), end=" | ")
                         else:
                             print(str(count1 + 1), end=" | ")
@@ -446,7 +446,6 @@ def setup():
                             else:
                                 print("Within Age & Experience Demographic | ", end=" | ")
 
-
                     for elem in elems:
                         skill = str(elem.text.lower())
                         skill_list.append(skill)
@@ -477,8 +476,9 @@ def setup():
                         continue
 
                     area_list = ["new york", "new jersey", "toronto", "mississauga", "brampton", "scarborough", "philadelphia",
-                                 "connecticut", "maryland", "washington d.c.", "delaware", "washington, district of columbia",
-                                 "virginia", "pennsylvania", "ontario", "united states"]
+                                  "maryland", "washington d.c.", "delaware", "washington, district of columbia",
+                                 "virginia", "pennsylvania", "ontario", "united states", "florida", "miami", "lauderdale", "ohio",
+                                 "washington dc", "washington, dc", "montreal"]
                     location_xpath = "//li[contains(@class,'t-16 t-black t-normal inline-block')]"
                     try:
                         location_element = WebDriverWait(driver, 7).until(lambda driver: driver.find_element_by_xpath
