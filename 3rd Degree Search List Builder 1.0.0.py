@@ -4,8 +4,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
-import bs4
-from bs4 import BeautifulSoup
 import random
 import pyperclip
 import unittest
@@ -115,14 +113,18 @@ locations = {"Greater New York City Area": "3A70",
              "Greater Philadelphia Area": "3A77",
              "Washington D.C. Metro Area": "3A97",
              "Baltimore, Maryland Area": "3A7416",
-             "Dover, Delaware Area": "3A219"
+             "Dover, Delaware Area": "3A219",
+             "Miami/Fort Lauderdale Area": "3A56",
+             "Columbus, Ohio": "3A184",
+             "Toronto, Canada": "3A4876",
              }
 
 location = Tk()
 variable3 = StringVar(location)
 variable3.set("")  # default value
 location_options = OptionMenu(location, variable3, "Greater New York City Area", "Greater Philadelphia Area",
-                              "Washington D.C. Metro Area ", "Baltimore, Maryland Area", "Dover, Delaware Area")
+                              "Washington D.C. Metro Area ", "Baltimore, Maryland Area", "Dover, Delaware Area",
+                              "Miami/Fort Lauderdale Area", "Columbus, Ohio", "Toronto, Canada")
 location_options.pack()
 
 
@@ -144,7 +146,6 @@ button3.pack()
 mainloop()
 
 filename = askopenfilename(title=str(email_var),
-                           initialdir=r"C:\Users\jirox_000\Desktop\Business Scripts\First Degree Connections",
                            filetypes=[("CSV files", "*.csv")])
 print(filename)
 
@@ -155,6 +156,7 @@ with open(filename, "rt") as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
     for row in reader:
         exclusion_list.append(row[0].lower())
+dir_path = os.path.dirname(os.path.realpath(__file__))
 csvfile.close()
 print('File Read! | ' + str(len(exclusion_list)))
 print('')
@@ -167,10 +169,10 @@ if variable2.get() == "Run Script (Headless)":
 
 bunji = os.getenv("USERNAME")
 # userProfile = "C:\\Users\\jirox_000\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
-userProfile = "C:\\Users\\" + bunji + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
+# userProfile = "C:\\Users\\" + bunji + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
 chrome_options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors", "safebrowsing-disable-download-protection", "safebrowsing-disable-auto-update", "disable-client-side-phishing-detection"])
 
-chrome_options.add_argument("user-data-dir={}".format(userProfile))
+# chrome_options.add_argument("user-data-dir={}".format(userProfile))
 chrome_options.add_argument('--disable-extensions')
 chrome_options.add_argument('--profile-directory=Default')
 chrome_options.add_argument("--incognito")
@@ -196,14 +198,16 @@ recruiter_keyword = str(input("Enter Keyword you want to use: ")).title().strip(
 recruiter_filename = str(re.sub(r'\W+', '', recruiter_keyword))
 
 file_name = str("3rd - " + name_var + " - " + recruiter_filename + " - " + location_var + " - " + ID + '.csv')
+file_name = file_name.replace("/", "-")
 print(file_name)
+
 print(user_agent)
 
 
 def set_up():
     driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver)
     driver.get('https://www.linkedin.com/uas/login?trk=guest_homepage-basic_nav-header-signin')
-    driver.set_page_load_timeout(60)
+    driver.set_page_load_timeout(600)
     num = 1
     page = str(num)
     recruiter_URL = 'https://www.linkedin.com/search/results/people/?facetGeoRegion=%5B%22us%' + encode + '%22%5D' + \
@@ -267,100 +271,106 @@ def set_up():
     print(str(num) + " Profiles | " + str(iterations) + " Pages")
 
     profile_list = []
-
+    errors = 0
     while loopy < iterations:
-        link_list = []
-        link_count = 0
-        county_boi = 0
-        results_found_elem = ''
-        try:
-            results_found_elem = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath(
-                "//h1[contains(@class, 't-normal')]")).get_attribute('innerText')
-        except TimeoutException:
-            if "No Results Found" in results_found_elem:
-                print("No Results Found. Closing Script.")
-                break
-            else:
-                print(loopy + 1, end="")
-                try:
-                    WebDriverWait(driver, 15).until(lambda driver: driver.find_elements_by_xpath(
-                        "//div[contains(@class, 'search-filters-bar')]"))
-                except TimeoutException:
-                    print("Script Failure")
-                    time_stamp = str(round(time.time()))
-                    driver.save_screenshot('screenie' + time_stamp + '.png')
-                    print('screenie' + time_stamp + '.png')
-                    loopy += 1
-                    driver.get(recruiter_URL + str(loopy + 1))
-                    continue
+        if errors < 6:
+            link_list = []
+            link_count = 0
+            county_boi = 0
+            results_found_elem = ''
+            try:
+                results_found_elem = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath(
+                    "//h1[contains(@class, 't-normal')]")).get_attribute('innerText')
+            except TimeoutException:
+                if "No Results Found" in results_found_elem:
+                    print("No Results Found. Closing Script.")
+                    break
                 else:
-                    print(".", end="")
-                while link_count < 10 and county_boi < 5:
-                    driver.find_element_by_tag_name('body').send_keys(Keys.PAGE_DOWN)
+                    print(loopy + 1, end="")
                     try:
-                        profile_wrappers = WebDriverWait(driver, 15).until(lambda driver: driver.find_elements_by_xpath(
-                            "//div[contains(@class, 'info')]"))
+                        WebDriverWait(driver, 15).until(lambda driver: driver.find_elements_by_xpath(
+                            "//div[contains(@class, 'search-filters-bar')]"))
                     except TimeoutException:
                         print("Script Failure")
                         time_stamp = str(round(time.time()))
                         driver.save_screenshot('screenie' + time_stamp + '.png')
+                        print('screenie' + time_stamp + '.png')
                         loopy += 1
                         driver.get(recruiter_URL + str(loopy + 1))
                         continue
                     else:
-                        link_count = len(profile_wrappers)
-                        county_boi += 1
-                print(".", end="")
-                try:
-                    link_elements = WebDriverWait(driver, 15).until(lambda driver: driver.find_elements_by_xpath(
-                        "//a[contains(@class, 'result-link')]"))
-                except TimeoutException:
-                    print("Script Failure")
-                    time_stamp = str(round(time.time()))
-                    driver.save_screenshot('screenie' + time_stamp + '.png')
-                    print('screenie' + time_stamp + '.png')
-                    loopy += 1
-                    driver.get(recruiter_URL + str(loopy + 1))
-                    continue
-                else:
-                    for e in link_elements:
-                        link_list.append(e.get_attribute('href'))
-                link_list = list(dict.fromkeys(link_list))
-                profile_wrapper_to_link_count = 0
-                for e in profile_wrappers:
-                    result_text = str(e.get_attribute('innerHTML')).lower()
-                    if any(sub in result_text for sub in exclusion_list):
-                        profile_wrapper_to_link_count += 1
-                    else:
+                        print(".", end="")
+                    while link_count < 10 and county_boi < 5:
+                        driver.find_element_by_tag_name('body').send_keys(Keys.PAGE_DOWN)
                         try:
-                            profile_list.append(link_list[profile_wrapper_to_link_count])
-                        except IndexError:
-                            profile_list.append(0)
-                        finally:
+                            profile_wrappers = WebDriverWait(driver, 15).until(lambda driver: driver.find_elements_by_xpath(
+                                "//div[contains(@class, 'info')]"))
+                        except TimeoutException:
+                            print("Script Failure")
+                            time_stamp = str(round(time.time()))
+                            driver.save_screenshot('screenie' + time_stamp + '.png')
+                            loopy += 1
+                            driver.get(recruiter_URL + str(loopy + 1))
+                            continue
+                        else:
+                            link_count = len(profile_wrappers)
+                            county_boi += 1
+                    print(".", end="")
+                    try:
+                        link_elements = WebDriverWait(driver, 15).until(lambda driver: driver.find_elements_by_xpath(
+                            "//a[contains(@class, 'result-link')]"))
+                    except TimeoutException:
+                        print("Script Failure")
+                        time_stamp = str(round(time.time()))
+                        driver.save_screenshot('screenie' + time_stamp + '.png')
+                        print('screenie' + time_stamp + '.png')
+                        loopy += 1
+                        driver.get(recruiter_URL + str(loopy + 1))
+                        continue
+                    else:
+                        for e in link_elements:
+                            link_list.append(e.get_attribute('href'))
+                    link_list = list(dict.fromkeys(link_list))
+                    if not link_list:
+                        loopy += 1
+                        errors += 1
+                        continue
+                    profile_wrapper_to_link_count = 0
+                    for e in profile_wrappers:
+                        result_text = str(e.get_attribute('innerHTML')).lower()
+                        if any(sub in result_text for sub in exclusion_list):
                             profile_wrapper_to_link_count += 1
-        loopy += 1
-        time.sleep(2.5)
-        page = str(loopy + 1)
-        recruiter_URL = 'https://www.linkedin.com/search/results/people/?facetGeoRegion=%5B%22us%' + encode + '%22%5D' + \
-                        '&facetIndustry=%5B%2296%22%2C%22124%22%2C%224%22%2C%2257%22%2C%2280%22%2C%2298%22%2C%2211%22%2C%22118' \
-                        '%22%2C%2251%22%2C%2253ejt%22%2C%2254%22%2C%226%22%2C%2284%22%2C%2291%22%2C%221%22%2C%22102%22%2C%22112' \
-                        '%22%2C%22114%22%2C%22116%22%2C%22117%22%2C%22119%22%2C%2212%22%2C%22123%22%2C%22134%22%2C%22135%22%' \
-                        '2C%22137%22%2C%22138%22%2C%22143%22%2C%22144%22%2C%22146%22%2C%22147%22%2C%2217%22%2C%2219%22%2C%' \
-                        '2220%22%2C%223%22%2C%2231%22%2C%2240%22%2C%2241%22%2C%2247%22%2C%2249%22%2C%225%22%2C%2252%22%2C%' \
-                        '2255%22%2C%2256%22%2C%2261%22%2C%2262%22%2C%227%22%2C%228%22%2C%2282%22%2C%2283%22%2C%2286%22%2C%' \
-                        '2287%22%2C%2297%22%5D' \
-                        '&facetNetwork=%5B%22O%22%5D&keywords=%22' + recruiter_keyword + \
-                        '%22&origin=FACETED_SEARCH&page=' + page + \
-                        '&title=NOT%20(' \
-                        '%22CEO%22%20OR%20%22Founder%22%20OR%20%22' \
-                        'President%22%20OR%20%22Chief%22%20OR%20%22Director%22%20OR%20%22Owner%22)'
+                        else:
+                            try:
+                                profile_list.append(link_list[profile_wrapper_to_link_count])
+                            except IndexError:
+                                profile_list.append(0)
+                            finally:
+                                profile_wrapper_to_link_count += 1
+            loopy += 1
+            driver.get('http://www.google.com')
+            time.sleep(10)
+            page = str(loopy + 1)
+            recruiter_URL = 'https://www.linkedin.com/search/results/people/?facetGeoRegion=%5B%22us%' + encode + '%22%5D' + \
+                            '&facetIndustry=%5B%2296%22%2C%22124%22%2C%224%22%2C%2257%22%2C%2280%22%2C%2298%22%2C%2211%22%2C%22118' \
+                            '%22%2C%2251%22%2C%2253ejt%22%2C%2254%22%2C%226%22%2C%2284%22%2C%2291%22%2C%221%22%2C%22102%22%2C%22112' \
+                            '%22%2C%22114%22%2C%22116%22%2C%22117%22%2C%22119%22%2C%2212%22%2C%22123%22%2C%22134%22%2C%22135%22%' \
+                            '2C%22137%22%2C%22138%22%2C%22143%22%2C%22144%22%2C%22146%22%2C%22147%22%2C%2217%22%2C%2219%22%2C%' \
+                            '2220%22%2C%223%22%2C%2231%22%2C%2240%22%2C%2241%22%2C%2247%22%2C%2249%22%2C%225%22%2C%2252%22%2C%' \
+                            '2255%22%2C%2256%22%2C%2261%22%2C%2262%22%2C%227%22%2C%228%22%2C%2282%22%2C%2283%22%2C%2286%22%2C%' \
+                            '2287%22%2C%2297%22%5D' \
+                            '&facetNetwork=%5B%22O%22%5D&keywords=%22' + recruiter_keyword + \
+                            '%22&origin=FACETED_SEARCH&page=' + page + \
+                            '&title=NOT%20(' \
+                            '%22CEO%22%20OR%20%22Founder%22%20OR%20%22' \
+                            'President%22%20OR%20%22Chief%22%20OR%20%22Director%22%20OR%20%22Owner%22)'
 
-        driver.get(recruiter_URL)
-        print(".", end="")
+            driver.get(recruiter_URL)
+            print(".", end="")
     driver.quit()
     profiles = len(profile_list)
 
-    with open(file_name, 'a', newline='') as my_file:
+    with open(file_name, 'a+', newline='') as my_file:
         wr = csv.writer(my_file, dialect='excel', quoting=csv.QUOTE_ALL)
         for x in range(0, profiles):
             wr.writerow([profile_list[x]])
