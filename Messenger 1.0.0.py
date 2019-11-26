@@ -21,7 +21,6 @@ from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import WebDriverException
 import re
 import pickle
-from pynput.mouse import Listener
 
 smtp_server = 'smtp.gmail.com'
 
@@ -145,7 +144,7 @@ def setup():
         if 'expiry' in cookie:
             cookie.pop('expiry')  # cookie['expires'] = cookie.pop('expiry')
         driver.add_cookie(cookie)
-    driver.get('https://www.linkedin.com/feed/')
+    driver.get('https://www.linkedin.com/mynetwork/invite-connect/connections/')
     logo_x_path = "(//span[contains(@id, 'feed-tab-icon')])"
     WebDriverWait(driver, 60).until(lambda driver: driver.find_element_by_xpath(logo_x_path))
     print("Log in successful")
@@ -232,6 +231,38 @@ def setup():
                   "Did you have a chance to go through my last message?",
                   "Did you have a chance to read the message I had sent you?"]
 
+    hook2_list = [
+        'Have you ever given any thought to utilizing your skills to develop a business outside of your career?',
+        'Have you ever given any thought to utilizing your skills to develop a business outside of your job?',
+        'Have you ever given any thought to utilizing your skills to develop a business outside of your profession?',
+        'Do you ever think about using your skills to develop a business outside of your career?',
+        'Do you ever think about using your skills to develop a business outside of your job?',
+        'Do you ever think about using your skills to develop a business outside of your profession?',
+        'Did you ever consider using your skills to develop a business outside of your career?',
+        'Did you ever consider using your skills to develop a business outside of your job?',
+        'Did you ever consider using your skills to develop a business outside of your profession?',
+        'Have you ever thought about utilizing your skills to develop a business outside of your career?',
+        'Have you ever thought about utilizing your skills to develop a business outside of your job?',
+        'Have you ever thought about utilizing your skills to develop a business outside of your profession?',
+        'Have you ever thought about using your skills to develop a business outside of your career?',
+        'Have you ever thought about using your skills to develop a business outside of your job?',
+        'Have you ever thought about using your skills to develop a business outside of your profession?'
+]
+
+    hook3_list = [' I wanted to follow-up the note I had sent with my connection request: ',
+                  ' After taking a look at your profile, I wanted to ask: ',
+                  ' I wanted to send a follow-up to the note I had sent with my connection request: ',
+                  ' I wanted to send a follow-up to the note I had sent with my invitation: ',
+                  ' I wanted to follow-up the note I had sent with my invitation: ',
+                  ' After taking a look at your profile, I wanted to follow-up: ',
+                  ' I want to follow-up the note I had sent with my connection request: ',
+                  ' After taking a look at your profile, I want to ask: ',
+                  ' I want to send a follow-up to the note I had sent with my connection request: ',
+                  ' I want to send a follow-up to the note I had sent with my invitation: ',
+                  ' I want to follow-up the note I had sent with my invitation: ',
+                  ' After taking a look at your profile, I want to follow-up: '
+]
+
     total_time = 0
     today_date = datetime.today().date().replace(day=1)
     interpersonal_skills_array = ['interpersonal', 'management', 'communication', 'leadership', ]
@@ -241,13 +272,15 @@ def setup():
         while True:
             wait.until(lambda driver: driver.current_url != url)
             wait.until(lambda driver: '.com/in/' in driver.current_url)
-
+            driver.get(driver.current_url)
+            time.sleep(1)
             source = str(driver.page_source)
 
             # find name
             start_pos = 0
             end_pos = len(source)
             name_bool = False
+            name = ''
             try:
                 current_position = source.index('"multiLocaleFirstName":{"en_US":"', start_pos,
                                                 end_pos)
@@ -269,10 +302,222 @@ def setup():
                 errors.append(results[count1])
                 continue
             else:
-                print(str(count1 + 1) + name, end=" | ")
+                print(str(count1 + 1) + "| " + name, end=" | ")
 
+            # check location area
+            location_area = ''
+            location_bool = False
+            start_pos = 0
+            end_pos = len(source)
+            # print('Bajinga') change to something else
+            try:
+                # print('Looking for location')  change to something else
+                current_position = source.index('defaultLocalizedNameWithoutCountryName":"', start_pos,
+                                                end_pos)
+            except ValueError:
+                # print("benghazi")  change to something else
+                location_bool = False
+            else:
+                start_pos = current_position + 41
+                try:
+                    # print('Still looking for location')  change to something else
+                    current_position = source.index('"', start_pos, end_pos)
+                except ValueError:
+                    # print("bonobo")  change to something else
+                    location_bool = False
+                else:
+                    end_pos = current_position
+                    location_area = str(source[start_pos:end_pos]).lower()
+            if location_bool:
+                count1 += 1
+                count2 += 1
+                errors.append(results[count1])
+                continue
 
+            print(location_area.title(), end=" | ")
 
+            start_pos = 0
+            position_array = []
+            # search for all work positions listed
+            while True:
+                end_pos = len(source)
+                try:
+                    current_position = source.index('"dateRange":{"start":{"month":', start_pos, end_pos)
+                except ValueError:
+                    break
+                else:
+                    start_pos = current_position
+
+                try:
+                    current_position = source.index(
+                        '"$type":"com.linkedin.common.DateRange"},"multiLocaleCompanyName":{"en_US":"', start_pos,
+                        end_pos)
+                except ValueError:
+                    break
+                else:
+                    end_pos = current_position
+                    position_array.append(source[start_pos:end_pos])
+                    start_pos = end_pos
+            if position_array:
+                position_array = list(dict.fromkeys(position_array))
+                positions = len(position_array)
+                end_check = sum(',"end":{' in s for s in position_array)
+            else:
+                print("No Positions Found.")
+                count1 += 1
+                count2 += 1
+                errors.append(results[count1])
+                continue
+
+            if end_check < positions:
+                print("Employed", end=" | ")
+            else:
+                print("Not Currently Employed", end=" | ")
+
+            experience = 0
+            present_array = []
+            # print(len(position_array), end=" | ")
+            test1 = []
+            test2 = []
+            for e in position_array:
+                sp = 0
+                ep = len(e)
+                # print(e, end=" ||| ")
+                month_index = int(e.index('start":{"month":', sp, ep) + 16)
+                comma_index = int(e.index(',', month_index, ep))
+                start_month = int(e[month_index:comma_index])
+                year_index = int(e.index('"year":', comma_index, ep) + 7)
+                start_year = int(e[year_index:(year_index + 4)])
+                start_date = datetime(year=start_year, month=start_month, day=1)
+                if 'end' in e:
+                    if 'end":{"month":' in e:
+                        month_index = int(e.index('end":{"month":', year_index, ep) + 14)
+                        comma_index = int(e.index(',', month_index, ep))
+                        end_month = int(e[month_index:comma_index])
+                    else:
+                        end_month = start_month
+                    year_index = int(e.index('"year":', comma_index, ep) + 7)
+                    end_year = int(e[year_index:(year_index + 4)])
+                    end_date = datetime(year=end_year, month=end_month, day=1)
+                    days = abs(end_date - start_date)
+                    years = int(days.days) / 365
+                    test1.append(round(years, 2))
+                    experience += round(years, 2)
+                else:
+                    end_date = datetime(year=int(today_date.year), month=int(today_date.month), day=1)
+                    days = abs(end_date - start_date)
+                    years = int(days.days) / 365
+                    test2.append(round(years, 2))
+                    present_array.append(round(years, 2))
+
+            if present_array:
+                experience += max(present_array)
+            experience = round(experience, 2)
+            print(str(experience) + " years experience", end=" | ")
+
+            start_pos = 0
+            temp_array_1 = []
+            # search for all skills
+            while True:
+                end_pos = len(source)
+                try:
+                    current_position = source.index(
+                        '"entityUrn":"urn:li:fsd_skill:'
+                        , start_pos, end_pos)
+                except ValueError:
+                    break
+                else:
+                    start_pos = current_position
+                try:
+                    current_position = source.index('multiLocaleName', start_pos, end_pos)
+                except ValueError:
+                    break
+                else:
+                    end_pos = current_position
+                    temp_array_1.append(source[start_pos:end_pos])
+                    start_pos = end_pos
+
+            skill_array = []
+            # build skill array
+            for e in temp_array_1:
+                sp = 0
+                ep = len(e)
+                skill_index = int(e.index(',"name":"', sp, ep) + 9)
+                comma_index = int(e.index('","', skill_index, ep))
+                skill_array.append(e[skill_index:comma_index].lower())
+            skill_fragment = ""
+            # check for skill match
+            for i in interpersonal_skills_array:
+                if i in skill_array:
+                    skill_fragment += (str(i) + ", ")
+            # Skill Check
+            if not skill_fragment:
+                print('No skill match', end=" | ")
+            else:
+                k = skill_fragment.rfind(', ')
+                if skill_fragment.count(', ') >= 3:
+                    skill_fragment = skill_fragment[:k] + ', and ' + skill_fragment[k + 1:]
+                elif skill_fragment.count(', ') == 2:
+                    skill_fragment = skill_fragment[:-2]
+                    skill_fragment = skill_fragment.replace(",", " and")
+                else:
+                    skill_fragment = skill_fragment.replace(",", "")
+                    print("Skill Match", end=" | ")
+            # print(sentence)
+            start_pos = 0
+            education_array = []
+            # search for education years listed
+            x = 1  # variable will change to 5 if there is no education
+            while True:
+                end_pos = len(source)
+                try:
+                    current_position = source.index('{"dateRange":{"start":{"year":', start_pos, end_pos)
+                except ValueError:
+                    break
+                else:
+                    start_pos = current_position
+                    education_array.append(int(re.sub('[^0-9]', "", source[start_pos + 30:start_pos + 34])))
+                try:
+                    current_position = source.index(
+                        ',"end":{"year":', start_pos,
+                        end_pos)
+                except ValueError:
+                    break
+                else:
+                    end_pos = current_position
+                    education_array.append(int(re.sub('[^0-9]', "", source[end_pos + 15:end_pos + 19])))
+                    start_pos = end_pos
+            if education_array:
+                age = (2019 - min(education_array)) + 18
+                education = int(max(education_array))
+                print(str(education), end=" | ")
+            else:
+                age = 25
+                x = 5
+                education = 2002
+            print(str(age) + " years old", end=" | ")
+            current_year = 2019
+            # education check
+            if current_year > education:
+                print("Graduated")
+            else:
+                print("Currently Student")
+
+            hour = datetime.now().hour
+            if 5 <= int(hour) <= 11:
+                greeting = random.choice(greetings1 + greetings2)
+            elif 12 <= int(hour) <= 17:
+                greeting = random.choice(greetings1 + greetings3)
+            elif 18 <= int(hour) <= 22:
+                greeting = random.choice(greetings1 + greetings4)
+            else:
+                greeting = random.choice(greetings1)
+
+            message_script = greeting + name + "! " + str(random.choice(acknowledgements)) + str(random.choice(
+                hook3_list)) + str(random.choice(hook2_list))
+            message_script = message_script.replace("  ", " ")
+            pyperclip.copy(message_script)
+            count1 += 1
             url = driver.current_url
     except TimeoutException:
         logging.error(traceback.print_exc())
