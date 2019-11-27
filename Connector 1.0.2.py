@@ -312,7 +312,7 @@ def setup():
                     if count1 % 25 == 0:  # test
                         driver.get('http://www.google.com')
                         print('Threshold met. Waiting at Google')
-                        countdown(random.randint(2700, 4500))
+                        countdown(random.randint(2700, 3600))
                         print(str(count1 + 1), end=" | ")
                     else:
                         print(str(count1 + 1), end=" || ")
