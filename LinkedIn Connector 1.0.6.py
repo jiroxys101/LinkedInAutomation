@@ -676,6 +676,7 @@ def setup():
     print("Start: " + d + " | " + "End: " + f)
     print("Successful Number of Invitations Sent: " + str(count3))
 
+
 def teardown(self):
     self.driver.quit()
 

@@ -23,6 +23,8 @@ import re
 import pickle
 
 smtp_server = 'smtp.gmail.com'
+holder = ''
+output = ''
 
 d = datetime.now().strftime("%I:%M %p")
 port = 465
@@ -354,6 +356,8 @@ def setup():
                         else:
                             end_pos = current_position
                             name = str(source[start_pos:end_pos]).title()
+                            name = name.split(' ', 1)[0]
+
                     if name_bool:
                         print('No Name Found.')
                         count1 += 1
@@ -758,6 +762,36 @@ def setup():
         with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
             server.login(sender_email, notification_password)
             server.sendmail(sender_email, receiver_email, message)
+        for x in range(0, count1):
+            results.pop(0)
+
+        fop = open(filename, "w+")
+        fop.close()
+
+        with open(filename, "w") as output:
+            writer = csv.writer(output, lineterminator='\n')
+            for val in results:
+                writer.writerow([val])
+
+        print("done")
+
+
+        print("Invitations Sent. Last Profile Messaged: " + str(name))
+        if count3 != 0:
+            avg_time = total_time / count3
+        else:
+            avg_time = total_time / 3
+        print("Average Time Per Profile: " + str(round(avg_time, 2)) + " seconds")
+        print(str(round(total_time, 2)) + " seconds")
+        count4 = 0
+        while count4 < len(errors):
+            print(errors[count4])
+            count4 += 1
+
+        from datetime import datetime
+        f = datetime.now().strftime("%I:%M %p")
+        print("Start: " + d + " | " + "End: " + f)
+        print("Successful Number of Invitations Sent: " + str(count3))
 
 
 def teardown(self):
