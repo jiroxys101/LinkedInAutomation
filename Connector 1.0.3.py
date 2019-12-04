@@ -183,7 +183,7 @@ print(results[0])
 print(os.getcwd())
 
 
-def setup():
+def setup(datetime=datetime):
     driver = webdriver.Chrome(options=options, executable_path=chrome_driver)
     driver.get('https://www.linkedin.com/uas/login?trk=guest_homepage-basic_nav-header-signin')
     driver.set_page_load_timeout(600)
