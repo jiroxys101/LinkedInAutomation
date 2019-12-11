@@ -19,7 +19,7 @@ from collections import OrderedDict
 import math
 import re
 import pickle
-
+import os
 
 log_in = {"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
           "Omotayo Ogunnusi": ["tayoogunnusi@outlook.com", "Temitope5"],
@@ -68,6 +68,8 @@ w.pack()
 name_var = ""
 email_var = ""
 pw_var = ""
+os.chdir('C:\\Users\\Rijul Kumar\\Documents\\LinkedInAutomation')
+
 
 
 def ok():
@@ -128,6 +130,8 @@ def set_up():
     logo_x_path = "(//span[contains(@id, 'feed-tab-icon')])"
     WebDriverWait(driver, 60).until(lambda driver: driver.find_element_by_xpath(logo_x_path))
     print("Log in successful")
+
+    time.sleep(3600)
 
 
 set_up()
