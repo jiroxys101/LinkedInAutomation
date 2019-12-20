@@ -35,7 +35,9 @@ receiver_email = 'jiroxys101@gmail.com'
 
 context = ssl.create_default_context()
 print(d)
-os.chdir('C:\\Users\\Rijul Kumar\\PycharmProjects\\LinkedInAutomation')
+# os.chdir('C:\\Users\\Rijul Kumar\\PycharmProjects\\LinkedInAutomation')
+os.chdir('C:\\Users\\Rijul Kumar\\Documents\\LinkedInAutomation')
+
 is_int = True
 
 
@@ -694,7 +696,7 @@ def setup():
                             except TimeoutException:
                                 pass
                             else:
-                                text_area_element.send_keys(Keys.CONTROL, 'v')
+                                text_area_element.send_keys(str(message_script))
                                 driver.execute_script('arguments[0].click();', send_button_element)
                                 try:
                                     WebDriverWait(driver, 5).until(
