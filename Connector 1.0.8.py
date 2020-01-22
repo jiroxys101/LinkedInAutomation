@@ -186,6 +186,11 @@ print(os.getcwd())
 
 def setup(datetime=datetime):
     driver = webdriver.Chrome(options=options, executable_path=chrome_driver)
+
+    if pause_time > 0:
+        driver.get('http://www.google.com')
+        countdown(pause_time)
+
     print("VPN", end="")
 
     #start up VPN
@@ -224,10 +229,6 @@ def setup(datetime=datetime):
     WebDriverWait(driver, 60).until(lambda driver: driver.find_element_by_xpath(logo_x_path))
     print("Log in successful")
     time.sleep(10)
-
-    if pause_time > 0:
-        driver.get('http://www.google.com')
-        countdown(pause_time)
 
     # time.sleep(60)
     count1 = 0  # counter to loop through array of links
