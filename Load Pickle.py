@@ -119,6 +119,19 @@ print(user_agent)
 
 def set_up():
     driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver)
+    print("VPN", end="")
+
+    # start up VPN
+
+    try:
+        os.system('TASKKILL /F /IM CyberGhost.exe')
+    except Exception:
+        print('...', end="")
+    finally:
+        os.startfile('C:\\Program Files\\CyberGhost 7\\CyberGhost.exe')
+        print(" Started! Waiting!")
+        time.sleep(120)
+
     driver.get('http://www.google.com/')
 
     cookies = pickle.load(open(str(email_var) + ".pkl", "rb"))
