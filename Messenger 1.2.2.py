@@ -35,8 +35,8 @@ receiver_email = 'jiroxys101@gmail.com'
 
 context = ssl.create_default_context()
 print(d)
-# os.chdir('C:\\Users\\Rijul Kumar\\PycharmProjects\\LinkedInAutomation')
-os.chdir('C:\\Users\\Rijul Kumar\\Documents\\LinkedInAutomation')
+os.chdir('C:\\Users\\Rijul Kumar\\PycharmProjects\\LinkedInAutomation')
+# os.chdir('C:\\Users\\Rijul Kumar\\Documents\\LinkedInAutomation')
 
 is_int = True
 
@@ -355,7 +355,7 @@ def setup():
         if count1 != 0:
             if count1 % 25 == 0:  # test
                 driver.get('http://www.google.com')
-                timey = random.randint(1800, 3600)
+                timey = random.randint(3600, 7200)
                 wimey = int(round(timey/60, 0))
                 print('Threshold met. Waiting at Google for ' + str(wimey) + ' minutes')
 
@@ -721,6 +721,7 @@ def setup():
                             else:
                                 text_area_element.send_keys(str(message_script))
                                 driver.execute_script('arguments[0].click();', send_button_element)
+                                time.sleep(random.randint(2, 5))
                                 try:
                                     WebDriverWait(driver, 5).until(
                                         lambda driver: driver.find_elements_by_xpath
