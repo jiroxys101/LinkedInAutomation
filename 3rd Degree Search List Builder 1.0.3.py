@@ -119,6 +119,7 @@ locations = {"Greater New York City Area": "us%3A70",
              "Miami/Fort Lauderdale Area": "us%3A56",
              "Columbus, Ohio": "us%3A184",
              "Toronto, Canada": "ca%3A4876",
+             "Trinidad": "tt%3A0"
              }
 
 location = Tk()
@@ -126,7 +127,7 @@ variable3 = StringVar(location)
 variable3.set("")  # default value
 location_options = OptionMenu(location, variable3, "Greater New York City Area", "Greater Philadelphia Area",
                               "Washington D.C. Metro Area", "Baltimore, Maryland Area", "Dover, Delaware Area",
-                              "Miami/Fort Lauderdale Area", "Columbus, Ohio", "Toronto, Canada")
+                              "Miami/Fort Lauderdale Area", "Columbus, Ohio", "Toronto, Canada", "Trinidad")
 location_options.pack()
 
 
