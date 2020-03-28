@@ -19,6 +19,9 @@ from collections import OrderedDict
 import math
 import re
 import pickle
+import requests
+from requests import get
+
 
 log_in = {"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
           "Omotayo Ogunnusi": ["tayoogunnusi@outlook.com", "Temitope5"],
@@ -119,7 +122,8 @@ locations = {"Greater New York City Area": "us%3A70",
              "Miami/Fort Lauderdale Area": "us%3A56",
              "Columbus, Ohio": "us%3A184",
              "Toronto, Canada": "ca%3A4876",
-             "Trinidad": "tt%3A0"
+             "Trinidad": "tt%3A0",
+             "Houston, Texas": "us%3A42",
              }
 
 location = Tk()
@@ -127,7 +131,7 @@ variable3 = StringVar(location)
 variable3.set("")  # default value
 location_options = OptionMenu(location, variable3, "Greater New York City Area", "Greater Philadelphia Area",
                               "Washington D.C. Metro Area", "Baltimore, Maryland Area", "Dover, Delaware Area",
-                              "Miami/Fort Lauderdale Area", "Columbus, Ohio", "Toronto, Canada", "Trinidad")
+                              "Miami/Fort Lauderdale Area", "Columbus, Ohio", "Toronto, Canada", "Trinidad", "Houston, Texas")
 location_options.pack()
 
 
@@ -233,6 +237,33 @@ print(user_agent)
 
 def set_up():
     driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver)
+
+    #start up VPN
+
+    try:
+        os.system('tasklist | find /i "CyberGhost.exe" && taskkill /im CyberGhost.exe /F || echo VPN not running')
+    except Exception:
+        print('...', end="")
+    finally:
+        time.sleep(5)
+        ip1 = str(get('https://api.ipify.org').text)
+        print(ip1, end="")
+        os.startfile('C:\\Program Files\\CyberGhost 7\\CyberGhost.exe')
+        ip2 = ip1
+        while True:
+            try:
+                ip2 = str(get('https://api.ipify.org').text)
+            except Exception:
+                pass
+            finally:
+                if ip2 != ip1:
+                    ip = str(get('https://api.ipify.org').text)
+                    print(ip)
+                    break
+                else:
+                    print('.', end="")
+                    time.sleep(1)
+
     driver.get('https://www.linkedin.com/uas/login?trk=guest_homepage-basic_nav-header-signin')
     driver.set_page_load_timeout(600)
     num = 1
@@ -290,6 +321,8 @@ def set_up():
     first = int(num.find(' '))
     last = int(num.rfind(' '))
     num = num[first:last].strip('').replace(',', '')
+    num = re.sub('[^0-9]', '', num)
+
     num = int(num)
     if num <= 1000:
         iterations = math.floor(num / 10) + 1

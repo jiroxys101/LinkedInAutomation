@@ -19,7 +19,8 @@ from collections import OrderedDict
 import math
 import re
 import pickle
-
+import requests
+from requests import get
 
 log_in = {"Rijul Kumar": ["rijulkumar.webtrafik@gmail.com", "Gocam2020"],
           "Omotayo Ogunnusi": ["tayoogunnusi@outlook.com", "Temitope5"],
@@ -121,6 +122,15 @@ while is_int:
 
 print("Pausing for " + str(pause_time) + " seconds")
 
+is_int = True
+while is_int:
+    wait_time = int(input("Enter how many seconds you would like to wait at LinkedIn for:"))
+    if isinstance(wait_time, int):
+        is_int = False
+    else:
+        is_int = True
+        print("Sorry.  That value is not an integer.", end=" | ")
+
 
 def countdown(t):
     while t >= 0:
@@ -137,7 +147,33 @@ print(user_agent)
 
 
 def set_up():
-    driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=chrome_driver)
+    driver = webdriver.Chrome(options=chrome_options, executable_path=chrome_driver)
+
+    #start up VPN
+
+    try:
+        os.system('tasklist | find /i "CyberGhost.exe" && taskkill /im CyberGhost.exe /F || echo VPN not running')
+    except Exception:
+        print('...', end="")
+    finally:
+        time.sleep(5)
+        ip1 = str(get('https://api.ipify.org').text)
+        print(ip1, end="")
+        os.startfile('C:\\Program Files\\CyberGhost 7\\CyberGhost.exe')
+        ip2 = ip1
+        while True:
+            try:
+                ip2 = str(get('https://api.ipify.org').text)
+            except Exception:
+                pass
+            finally:
+                if ip2 != ip1:
+                    ip = str(get('https://api.ipify.org').text)
+                    print(ip)
+                    break
+                else:
+                    print('.', end="")
+                    time.sleep(1)
 
     if pause_time > 0:
         driver.get('http://www.google.com')
@@ -151,7 +187,7 @@ def set_up():
     email_field_id = "username"
     pass_field_id = "password"
     login_button_xpath = "//button[contains(@type,'submit')]"
-    print("Logging in", end="")
+    print("Logging in", end="...")
     driver.save_screenshot('screenie.png')
 
     email_field_element = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_id(email_field_id))
@@ -169,10 +205,12 @@ def set_up():
     logo_x_path = "(//span[contains(@id, 'feed-tab-icon')])"
     WebDriverWait(driver, 60).until(lambda driver: driver.find_element_by_xpath(logo_x_path))
     print("Log in successful")
-
-    time.sleep(300)
-
     pickle.dump(driver.get_cookies(), open(str(email_var) + ".pkl", "wb"))
+
+    if wait_time > 0:
+        print("Waiting at LinkedIn for " + str(wait_time) + " seconds")
+        time.sleep(wait_time)
+
 
 
 set_up()
