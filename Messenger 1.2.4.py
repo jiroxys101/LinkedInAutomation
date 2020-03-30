@@ -376,7 +376,7 @@ def setup():
                 except Exception:
                     print('...', end="")
                 finally:
-                    time.sleep(5)
+                    countdown(wait_2)
                     ip1 = str(get('https://api.ipify.org').text)
                     print(ip1, end="")
                     os.startfile('C:\\Program Files\\CyberGhost 7\\CyberGhost.exe')
